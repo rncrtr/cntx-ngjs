@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ripple" class="no-js">
+<html lang="en" ng-app="whiteflag" class="no-js">
 <head>
   <base href="/">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ripple Missions</title>
+  <title>White Flag Calvary</title>
   <meta name="description" content="">
   <meta name="theme-color" content="#333333">
   <link rel="manifest" href="manifest.json" />
@@ -15,7 +15,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
   <link rel="stylesheet" href="app.css">
-  <script type="text/javascript">window.version = '04-27-19-1218';</script>
+  <script type="text/javascript">window.version = '12-09-18-1102';</script>
+  <script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+      heap.load("2622635395");
+  </script>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "85591aee-e835-4756-9fb0-eaa2a8e6afdf",
+      });
+    });
+  </script>
   <script>
     // Detects if device is on iOS 
     const isIos = () => {
@@ -58,17 +71,126 @@
   </div>
 <!--HOME-->  
   <script type="text/ng-template" id="home.html">
-    <div class="page" style="margin-top: 10px;">
-      <div class="center">
-        <img src="assets/images/RippleMissionsLogo.jpg" width="50%" style="min-height: 80px;" />
-        <div class="col">
-          <br /><h4>Find your church:</h4>
-          <input class="form-control" ng-model="churchQuery" ng-change="churchSearch()" />
+    <div class="page">
+        <div>
+            <img src="assets/images/renewal-banner.jpg" width="100%" />
+            <!--
+            <video controls id="welcome_video"
+            src="assets/videos/wfc-welcome-video.mp4" width="100%" height="205">
+            Sorry, your browser doesn't support embedded videos, 
+            but don't worry, you can <a href="assets/videos/wfc-welcome-video.mp4">download it</a> 
+            and watch it with your favorite video player!
+            </video>
+            -->
         </div>
-      </div>
+        <ul class="list-group home-menu">
+            <li class="list-group-item" ng-repeat="mi in menuItems">
+                <a href="{{mi.url}}">
+                    <i ng-class="mi.icon" style="font-size: 1.3em; position: absolute; left: 10px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mi.name}}<span ng-if="mi.ext==true" class="ext-link text-left fas fa-fw fa-external-link-alt"></span>
+                    <i class="fas fa-fw fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
     </div>
   </script>
 <!--/HOME-->
+<!--ANNOUNCEMENTS-->
+  <script type="text/ng-template" id="news.html">
+    <div class="page">
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+            <div class="page-title">Announcements</div>
+            <div ng-show="!anns" class="text-center"><img src="assets/images/loader.gif" /></div>
+            <div ng-show="!anns.length > 0">There are no announcements right now.</div>
+            <div ng-repeat="ann in anns" class="card card-block gray-bg" style="padding: 5px 10px;">
+              <strong class="size-medium">{{ann.title}}</strong>
+              <span>{{ann.desc}}</span>
+              <span class="text-left small gray" ng-show="ann.ts">{{ann.ts | timeago}}</span>
+              <span class="text-right" ng-show="ann.author">&nbsp;&mdash;&nbsp;{{ann.author}}</span>
+            </div>
+        </div>
+    </div>
+  </script>
+<!--/ANNOUNCEMENTS-->
+<!--STUDIES-->
+  <script type="text/ng-template" id="studies.html">
+    <div class="page" ng-controller="StudiesCtrl">
+      <div ng-if="!currentStudy">
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+            <div class="page-title">Studies & Podcast</div>
+            <p style="line-height: 1em;"><small>You can listen to past studies below or subscribe to our podcast to have new ones automatically delivered.<br /><br /><b>iOS:</b>&nbsp;Click this <a href="https://itunes.apple.com/us/podcast/white-flag-calvary/id805890545?mt=2" class="link">iTunes link</a> to subscribe.
+              <br /><b>Android:</b>&nbsp;Click to copy <a href="" ng-click="copyToClipboard('http://whiteflagcalvary.sermon.net/rss/main')" class="link">this RSS link</a>, then paste in your favorite podcast app. <a href="https://play.google.com/store/apps/details?id=fm.castbox.audiobook.radio.podcast&hl=en" class="link">Castbox.FM</a>, <a href="https://play.google.com/store/apps/details?id=sanity.podcast.freak&hl=en" class="link">Podcast Go</a>, and <a href="https://play.google.com/store/apps/details?id=com.bambuna.podcastaddict&hl=en" class="link">Podcast Addict</a> are top choices if you need one.</small></p>
+        </div>
+        <ul class="list-group" >
+            <li class="list-group-item" ng-repeat="mi in menuItems" ng-click="setStudy(mi.name)">
+             <a>
+                {{mi.name}}
+                <i class="fas fa-fw fa-chevron-right"></i>
+             </a>
+            </li>
+        </ul>
+        </div>
+        <div ng-if="currentStudy">
+            <ul class="list-group"><li class="list-group-item no-border"><a ng-click="setStudy(null)"><span class="fas fa-fw fa-chevron-left text-left"></span><span>Back</span></a></li></ul>
+            <div class="sermonnet iframe-loader" style="width:500px;max-width:100%;">
+              <iframe id="studyplayer" ng-src="{{setPlayerUrl(currentPlayer) | trustAsResourceUrl}}" name="sermon-frame" frameborder="0" width="100%" height="1000px" scrolling="yes" allowTransparency="true" allowfullscreen class="sermon-iframe">
+                  <a ng-href="{{setPlayerUrl(currentPlayer) | trustAsResourceUrl}}"><p>Your browser does not support iFrames, please click here to access our media center.</p></a> 
+              </iframe>
+              <script type="text/javascript" src="https://whiteflagcalvary.sermon.net/ICampus/js/embeddedPlayerHelper.js"></script>
+            </div>
+        </div>
+    </div>
+  </script>
+<!--/STUDIES-->
+<!--DEVOTIONS-->
+  <script type="text/ng-template" id="devotions.html">
+    <div class="page" ng-controller="DevotionsCtrl">
+      <goback></goback>
+      <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+          <div class="page-title">Devotions</div>
+            <iframe id="devos" src="https://ripplemissions.com/api/devotions.php" scrolling="yes" frameborder="0" width="100%" height="2000px"></iframe>
+          <div class="text-center">
+              <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
+          </div>
+          <br /><br />
+        </div>
+    </div>
+  </script>
+<!--/DEVOTIONS-->
+<!--PRAYER-->
+  <script type="text/ng-template" id="prayer.html">
+    <div class="page">
+      <nav-menu></nav-menu>
+      <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+          <div class="page-title">Prayer Requests</div>
+            <div class="prayer-request">
+                <!--<label for="prayerName" class="bold">Name:</label>-->
+                <input type="text" id="prayerName" class="form-control" ng-model="prayerName" placeholder="Name" /><br />
+                <!--<label for="prayerEmail" class="bold">Email:</label>-->
+                <input type="text" id="prayerEmail" class="form-control" ng-model="prayerEmail" placeholder="Email" /><br />
+                <!--<label for="prayerPhone" class="bold">Phone:</label>-->
+                <input type="text" id="prayerPhone" class="form-control" ng-model="prayerPhone" placeholder="Phone" /><br />
+                <label for="prayerRequest" class="bold">How can we pray for you? <span class="text-danger bold">*</span></label>
+                <textarea id="prayerRequest" class="form-control" rows="5" ng-model="prayerRequest"></textarea>
+                <div class="prayer-error text-danger bold" ng-show="prayerError">Please fill in a prayer request to send this.</div>
+                <br />
+                <button class="btn btn-primary btn-block" ng-click="prepPrayerRequest()" ng-show="!showResult">Send</button>
+                <span ng-show="showResult">
+                  {{prayerSentMsg}} If you need to talk to someone please call or text Pastor Shawn at 720.505.3808.
+                  <button class="btn btn-link btn-sm" ng-click="resetPrayerForm()"><i class="fas fa-times"></i> Dismiss</button>
+                </span>  
+            </div>
+          <br /><br />
+        </div>
+    </div>
+  </script>
+<!--/PRAYER-->
 <!--ABOUT-->
   <script type="text/ng-template" id="about.html">
     <div class="page">
@@ -77,9 +199,14 @@
         <div class="col about">
             <div class="page-title">About</div>
                 <p>
-                Ripple Missions is located in Colorado Springs, CO. <br />
+                White Flag Calvary is located in Denver, CO. <br />
                 </p>
-                <p>Our privacy policy is located <a class="link" href="http://ripplemissions.com/privacy-policy">on our website</a>.</p>
+                <p>
+                Sermon series by Pastor Shawn Reinsel &mdash; and others &mdash; as noted. <br />
+                </p>
+                <p>Devotions by Bob Hoekstra from the book <em>Day by Day by Grace</em>. More information here: <a class="link" href="http://livinginchrist.org/">Living in Christ Ministries</a> </p>
+                <p>App Development donated by Ryan Carter at <a class="link" href="http://overthinkdev.com">OverthinkDev.com</a></p>
+                <p>Our privacy policy is located <a class="link" href="http://whiteflagcalvary.org/privacy-policy">on our website</a>.</p>
                 <p>Photos by <a href="https://pixabay.com" class="link">Pixabay</a> and <a href="https://unsplash.com" class="link">Unsplash</a></p>
         </div>
     </div>
@@ -93,7 +220,7 @@
         <div class="col">
             <div class="page-title">Bug Reports&nbsp;<i class="fas fa-bug"></i></div>
               <p><br />
-              Find a bug or spot a typo in our app? Oh noez! Have a question or suggestion for the app?<br /><br />Please email Ryan directly here: <a href="mailto:ryan@ripplemissions.com" class="link">ryan@ripplemissions.com</a>.</p>
+              Find a bug or spot a typo in our app? Oh noez! Have a question or suggestion for the app?<br /><br />Please email Ryan directly here: <a href="mailto:ryan@overthinkdev.com" class="link">ryan@overthinkdev.com</a>.</p>
 
               <p>
               We want to provide the best experience possible for you, so please let us know how we can improve.
@@ -101,12 +228,745 @@
               Thanks for your interest in making this app better!
 
               <br /><br />
-              - Ripple Missions
+              - White Flag Calvary
               </p>
         </div>
     </div>
   </script>
 <!--/BUGS-->
+<!--SERVICES-->
+  <script type="text/ng-template" id="services.html">
+    <div class="page" ng-controller="ServicesCtrl">
+        <nav-menu></nav-menu>
+      <goback></goback>    
+      <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+            <div class="page-title">Services & Contact Info</div>
+            <br />
+            <p>
+            <b>Sunday Morning Service</b><br />
+            10:00 am (8:45 am prayer)<br />
+            </p>
+            <p>
+            <b>First Wednesday of the Month</b><br />
+            Surrender Service<br />
+            7:00 pm<br />
+            </p>
+            <p>
+            4625 E. Iowa Ave.<br />
+            Denver, CO 80222<br />
+            <a class="text-primary" href="https://www.google.com/maps/place/4625+E+Iowa+Ave,+Denver,+CO+80222/@39.6836303,-104.9332396,15z/data=!4m7!1m4!3m3!1s0x876c7dde82eac263:0x2912172574625955!2s4625+E+Iowa+Ave,+Denver,+CO+80222!3b1!3m1!1s0x876c7dde82eac263:0x2912172574625955">View Map</a>
+            </p>
+            <p>
+            <b>Email:</b><br />
+            <a class="text-primary" href="mailto:shawn@whiteflagcalvary.org">shawn@whiteflagcalvary.org</a><br /><br />
+            <b>Call or Text:</b><br />
+            720.505.3808
+            </p>
+        </div>
+    </div>
+  </script>
+<!--/SERVICES-->
+<!--MISSIONS-->
+  <script type="text/ng-template" id="missions.html">
+    <div class="page">
+        <nav-menu></nav-menu>
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+        <div class="page-title">Missions</div>
+        <p>
+          We love our missionaries, who are serving the Lord (and others) faithfully in the US and abroad. 
+          Feel free to connect with them directly and get involved in what God is doing around the world.<br /><br />Please pray for our partners in the field, consider supporting them if you can, and if nothing else, you could send them an encouraging word to let them know you're thinking of them.
+        </p>
+        <br /><hr /><br /><br />
+    <div class="missions-section">
+      <div class="missions-photo photo-img-jpg">
+        <img class="photo-img wp-image-1224 size-medium" src="assets/images/missions/treu.jpg" alt="treu" itemprop="image" width="100%">
+      </div>
+      <p>
+        <b>
+          <span style="font-size: 24px;">Branden &amp; Ernie Treu</span>
+
+          <br>
+        </b>
+        <b>
+          <span style="font-size: 18px;">Ethan &amp; Silas</span>
+          <br>
+        </b>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">Calvary Cork</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Children’s Ministry</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:&nbsp;</b>
+        <a class="link" href="http://treuimage.com">
+          <span style="font-weight: 400;">treuimage.com
+            <br>
+          </span>
+        </a>
+        <b>Email: </b>
+        <a class="link" href="mailto:thetreus@treuimage.com">
+          <span style="font-weight: 400;">thetreus@treuimage.com</span>
+        </a>
+      </p>
+    </div><br />
+    <hr /><br /><br />
+    <div class="missions-section">
+      <div class="missions-photo photo-img-png">
+        <img src="assets/images/missions/fox.png" alt="fox" itemprop="image" width="100%">
+      </div>
+      <p>
+        <b>
+          <span style="font-size: 24px;">Kyle &amp; Krista Fox</span>
+          <br>
+        </b>
+        <b>
+          <span style="font-size: 18px;">Aidan &amp; Liam</span>
+          <br>
+        </b>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">Calvary Chapel Belém</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Serving Victims of Human Trafficking</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:</b>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;
+          <a class="link" href="http://diagratia.org">diagratia.org</a>
+          <br>
+        </span>
+        <b>Email: &nbsp;&nbsp;</b>
+        <a class="link" href="mailto:kyle@diagratia.org">
+          <span style="font-weight: 400;">kyle@diagratia.org</span>
+        </a>
+        <span style="font-weight: 400;">
+          <br>
+        </span>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a class="link" href="mailto:krista@diagratia.org">krista@diagratia.org</a>
+          <br>
+        </span>
+        <b>FB:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://bit.ly/2x41my8">http://bit.ly/2x41my8</a>
+          <br>
+        </span>
+        <b>Whatsapp:</b>
+        <span style="font-weight: 400;"> +55 (91) 8508-0446 (text/call)</span>
+      </p>
+    </div><br />
+    <hr /><br /><br />
+    <div class="missions-section">
+      <div class="missions-photo photo-img-jpg">
+        <img class="photo-img wp-image-1226 size-medium" src="assets/images/missions/betts.jpg" alt="betts" itemprop="image" width="100%">
+      </div>
+      <p>
+        <span style="font-size: 24px;">
+          <b>Gary &amp; Carli Betts
+            <br>
+          </b>
+        </span>
+        <b>
+          <span style="font-size: 18px;">Ruth, Esther, &amp; Naomi</span>
+          <br>
+        </b>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">New Hope Calvary Chapel</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Church Planting, Street Ministry</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://stepsoffaith.me">stepsoffaith.me</a>
+          <br>
+        </span>
+        <b>Email: &nbsp;</b>
+        <a class="link" href="mailto:gary@stepsoffaith.me">
+          <span style="font-weight: 400;">gary@stepsoffaith.me</span>
+        </a>&nbsp;or
+        <span style="font-weight: 400;">
+          <a class="link" href="mailto:carli@stepsoffaith.me">carli@stepsoffaith.me</a>
+          <br>
+        </span>
+        <b>FB:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://facebook.com/stepsoffaith.me">facebook.com/stepsoffaith.me</a>
+        </span>
+      </p>
+    </div><br />
+    <hr />
+    <br /><br />
+
+    <div class="missions-section">
+      <div class="missions-photo photo-img-png">
+        <img class="photo-img wp-image-1233 size-medium" src="assets/images/missions/coupal.png" alt="coupal" itemprop="image" width="100%">
+      </div>
+      <p>
+        <b>
+          <span style="font-size: 24px;">Jon &amp; Kristen Coupal</span>
+          <br>
+        </b>
+        <span style="font-weight: 400; font-size: 18px;">Terebinth Ministry School of Discipleship
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Pastoral Leadership Training</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:</b>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;
+          <a class="link" href="http://coupalstouganda.com">coupalstouganda.com</a>
+          <br>
+        </span>
+        <b>FB:</b>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a class="link" href="http://facebook.com/coupalstouganda">facebook.com/coupalstouganda</a>
+        </span>
+      </p>
+    </div><br />
+    <hr /><br /><br />
+
+    <div class="missions-section">
+      <div class="missions-photo photo-img-jpg">
+        <img class="photo-img wp-image-1227 size-medium" src="assets/images/missions/fouse.jpg" alt="fouse" itemprop="image" width="100%">
+      </div>
+      <p>
+        <span style="font-size: 24px;">
+          <b>Amanda Fouse</b>
+        </span>
+        <b>
+          <br>
+        </b>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">New Hope Calvary Chapel</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Church Planting, Street Ministry</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://amandainireland.com">amandainireland.com</a>
+          <br>
+        </span>
+        <b>Email: &nbsp;</b>
+        <a class="link" href="mailto:amandafouse94@icloud.com">
+          <span style="font-weight: 400;">amandafouse94@icloud.com
+            <br>
+          </span>
+        </a>
+        <b>FB:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://facebook.com/offtoireland">facebook.com/offtoireland</a>
+        </span>
+      </p>
+    </div><br />
+    <hr /><br /><br />
+    <div class="missions-section">
+      <div class="missions-photo photo-img-jpg">
+        <img class="photo-img wp-image-1235 size-full" src="assets/images/missions/johnsons.jpg" alt="johnsons" itemprop="image" width="100%">
+      </div>
+      <p>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">
+            <b>Byron and Emily Johnson
+              <br>
+            </b>Calvary Chapel Zaporozhye</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Serving as Lead Pastor, Worship</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Website:&nbsp;
+          <span style="font-weight: 400;">
+            <a class="link" href="http://byronandemilyinukraine.blogspot.com">byronandemilyinukraine.blogspot.com</a>
+            <br>
+          </span>
+        </b>
+        <b>Email: </b>
+        <span style="font-weight: 400;">
+          <a class="link" href="mailto:byronandemilyj@gmail.com">byronandemilyj@gmail.com</a>
+          <br>
+        </span>
+        <b>FB:</b>
+        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp; &nbsp;
+          <a class="link" href="http://facebook.com/johnsonsinukraine">facebook.com/johnsonsinukraine</a>
+        </span>
+      </p>
+      <p>&nbsp;</p>
+    </div><br />
+    <hr /><br /><br />
+
+    <div class="missions-section">
+      <div class="missions-photo photo-img-jpg">
+        <img class="photo-img wp-image-1237 size-medium" src="assets/images/missions/matthews.jpg" alt="matthews" itemprop="image" width="100%" />
+      </div>
+      <p>
+        <b>
+          <span style="font-size: 24px;">Bob &amp; Cate Matthews</span>
+          <br>
+        </b>
+        <span style="font-weight: 400;">
+          <span style="font-size: 18px;">After The Storm 4 Christ</span>
+          <br>
+        </span>
+        <span style="font-size: 14px;">
+          <i>
+            <span style="font-weight: 400;">Disaster Recovery, Crisis Response</span>
+          </i>
+        </span>
+      </p>
+      <p>
+        <b>Web:</b>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;
+          <a class="link" href="http://afterthestorm4christ.org">afterthestorm4christ.org</a>
+          <br>
+        </span>
+        <b>Email: &nbsp;</b>
+        <a class="link" href="mailto:relief@afterthestorm4christ.org">
+          <span style="font-weight: 400;">relief@afterthestorm4christ.org
+            <br>
+          </span>
+        </a>
+        <b>FB:</b>
+        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <a class="link" href="http://facebook.com/AftertheStorm4Christ">
+          <span style="font-weight: 400;">facebook.com/AftertheStorm4Christ</span>
+        </a>
+      </p>
+    </div>
+    <div class="text-center">
+        <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
+    </div>
+    <br /><br />
+  </script>
+<!--/MISSIONS-->
+<!--GIVING-->
+  <script type="text/ng-template" id="giving.html">
+    <div class="page">
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+            <div class="page-title">Giving</div>
+            <p>
+                We give because of the grace that God has given us. The Bible describes this grace of giving as being:
+            </p>
+            <p>
+                <ul>
+                   <li>Generous (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A2&version=NKJV" class="link
+            ">2 Corinthians 8:2</a>)</li>
+                    <li>Willful (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A3&version=NKJV" class="link
+            ">2 Corinthians 8:3</a>)</li>
+                    <li>God-directed (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A5&version=NKJV" class="link
+            ">2 Corinthians 8:5</a>)</li>
+                    <li>Shared (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A6&version=NKJV" class="link
+            ">2 Corinthians 8:6</a>)</li>
+                    <li>Active (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A7&version=NKJV" class="link
+            ">2 Corinthians 8:7</a>)</li>
+                    <li>Love-motivated (<a href="https://www.biblegateway.com/passage/?search=2+Corinthians+8%3A8&version=NKJV" class="link
+            ">2 Corinthians 8:8</a>)</li> 
+                </ul>
+            </p>
+            <p>
+            We are not under compulsion to give; rather, we should cheerfully offer what God has placed on our hearts (see <a href="https://www.biblegateway.com/passage/?search=2+Cor+9%3A7&version=NKJV" class="link
+            ">2 Corinthians 9:7</a>). We consider giving a form of worship to the Lord, which is why we receive these offerings during our Sunday service. We also offer an online giving option.
+            </p>
+            <p>
+            You will never be asked for money at White Flag Calvary.  We trust in the Lord and not in our flesh.
+            </p>
+            <p>
+            If you would like to give, we provide an online giving option here:
+            </p>
+            <p>
+            <div class="text-center">
+                <a class="btn btn-primary link-white" href="https://app.easytithe.com/g3/?uid=whit4712265">Give Online</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+  </script>
+<!--/GIVING--> 
+<!--FOODBANK-->
+  <script type="text/ng-template" id="foodbank.html">
+    <div class="page">
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+            <div class="page-title">Love Abounds Food Bank</div>
+            <p class="text-center">
+                <br />
+                <b>
+                3<sup>rd</sup> Wednesday of the month<br />
+                From 3:00 pm to 6:00 pm<br />
+                at White Flag<br />
+                </b>
+            </p>
+            <p>
+                Many families and school age children 
+                in and around our neighborhood don't get enough to eat, 
+                so this is a simple way to love our community in a tangible way.
+            </p>
+            <p>
+                We ask for donations of these items to give away once a month:<br />
+                <ul>
+                    <li>Peanut Butter</li>
+                    <li>Jelly (Grape and other flavors)</li>
+                    <li>Pasta (Spaghetti and others)</li>
+                    <li>Pasta Sauce</li>
+                    <li>Cereal</li>
+                </ul>
+            </p>
+            <p>
+                Please come out and join us to give away food. We pray and talk with them about their lives. We'd love to have you join us.
+            </p>
+        </div>
+    </div>
+  </script>
+<!--/FOODBANK-->
+<!--DISCIPLESHIP-->
+  <script type="text/ng-template" id="discipleship.html">
+    <div class="page">
+        <nav-menu></nav-menu>
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+        <div class="page-title">Discipleship</div>
+        <div id="lic_discipleship">
+          <table class="standard_table small">
+            <tbody>
+              <tr>
+                <th>
+                  <h4 class="small"></div>
+                </th>
+                <th>
+                  <div class="page-title">Study Title </div>
+                </th>
+                <th class="pad5">
+                  <h4 class="small" title="Listen"> <i class="fas fa-fw fa-headphones fa-2x"></i> </div>
+                </th>
+                <th class="pad5">
+                  <h4 class="small" title="Download"> <i class="fas fa-fw fa-download fa-2x"></i> </div>
+                </th>
+                <th class="pad5">
+                  <h4 class="small" title="Outline"> <i class="fas fa-fw fa-file-alt fa-2x"></i> </div>
+                </th>
+              </tr>
+              <tr>
+                <td class="v-top"> 1 </td>
+                <td> Introduction &amp; Overview&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-01.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-01.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-01.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 2 </td>
+                <td> The New Covenant&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-02.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-02.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-02.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 3 </td>
+                <td> The Old Covenant of Law – P1&nbsp;</td>
+                <td class="pad5"c><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-03.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-03.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-03.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 4 </td>
+                <td> The Old Covenant of Law – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-04.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-04.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-04.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 5 </td>
+                <td> The New Covenant of Grace – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-05.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-05.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-05.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 6 </td>
+                <td> The New Covenant of Grace – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-06.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-06.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-06.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 7 </td>
+                <td> The Holy Spirit Covenant – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-07.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-07.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-07.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 8 </td>
+                <td> The Holy Spirit Covenant – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-08.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-08.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-08.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 9 </td>
+                <td> The Resurrection Covenant – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-09.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-09.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-09.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 10 </td>
+                <td> The Resurrection Covenant – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-10.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-10.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-10.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 11 </td>
+                <td> A Covenant of Relationship – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-11.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-11.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-11.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 12 </td>
+                <td> A Covenant of Relationship – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-12.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-12.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-12.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 13 </td>
+                <td> Characteristics of New Covenant Life &amp; Service – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-13.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-13.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-13.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 14 </td>
+                <td> Characteristics of New Covenant Life &amp; Service – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-14.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-14.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-14.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 15 </td>
+                <td> Contrasts Between the Old &amp; New Covenants – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-15.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-15.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-15.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 16 </td>
+                <td> Contrasts Between the Old &amp; New Covenants – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-16.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-16.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-16.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 17 </td>
+                <td> More Characteristics of New Covenant Life &amp; Service – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-17.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-17.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-17.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 18 </td>
+                <td> More Characteristics of New Covenant Life &amp; Service – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-18.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-18.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-18.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 19 </td>
+                <td> New Covenant Obedience – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-19.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-19.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-19.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 20 </td>
+                <td> New Covenant Obedience – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-20.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-20.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-20.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 21 </td>
+                <td> A Covenant of Better Promises – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-21.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-21.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-21.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 22 </td>
+                <td> A Covenant of Better Promises – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-22.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-22.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-22.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 23 </td>
+                <td> Various Aspects of New Covenant Grace – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-23.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-23.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-23.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 24 </td>
+                <td> Various Aspects of New Covenant Grace – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-24.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-24.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-24.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 25 </td>
+                <td> Various Aspects of New Covenant Grace – P3&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-25.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-25.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-25.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 26 </td>
+                <td> Humility &amp; Faith – P1; Sess 1 of 2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-26.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-26.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-26.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 27 </td>
+                <td> Humility &amp; Faith – P1; Sess 2 of 2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-27.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-27.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-27.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 28 </td>
+                <td> Humility &amp; Faith – P2; Sess 1 of 2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-28.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-28.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-28.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 29 </td>
+                <td> Humility &amp; Faith – P2; Sess 2 of 2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-29.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-29.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-29.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 30 </td>
+                <td> Living by Faith – P1&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-30.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-30.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-30.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+              <tr>
+                <td class="v-top"> 31 </td>
+                <td> Living by Faith – P2&nbsp;</td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-31.mp3" class="popup" data-width="500" data-height="150" data-scrollbars="1" alt=""><img src="assets/images/discipleship/icon-play.png" alt="icon-play" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/downloadmp3.php?file=grace_id-31.mp3"><img src="assets/images/discipleship/icon-download.png" alt="icon-download" width="25" height="25"></a></td>
+                <td class="pad5"><a href="http://www.livinginchrist.org/wp-content/media/grace_id/grace_id-31.pdf" target="_blank"><img src="assets/images/discipleship/icon-outline.png" alt="icon-outline" width="25" height="25"></a></td>
+              </tr>
+            </tbody>
+          </table><br />
+          <div class="text-center small font-weight-bold">by <a class="link" href="http://www.livinginchrist.org/">Living In Christ</a> (Pastor Bob Hoekstra)</div>
+          <br />
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+        <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
+    </div>
+    <br /><br />
+  </script>
+<!--/DISCIPLESHIP-->
+<!--RESOURCES-->
+  <script type="text/ng-template" id="resources.html">
+    <div class="page">
+        <nav-menu></nav-menu>
+        <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+        <div class="page-title">Resources</div>
+        <div ng-if="audio.length > 0" class="bold">Audiobooks</div>
+        <ul class="list-group resources-menu">
+          <li class="list-group-item" ng-repeat="a in audio">
+            <a href="{{a.url}}" target="_blank">
+              <i ng-class="a.icon" class="text-left"></i>
+              {{a.name}}
+            </a>
+          </li>
+        </ul>
+    <br ng-if="audio.length > 0" />
+    <hr ng-if="audio.length > 0" />
+    <br ng-if="audio.length > 0" />
+        <div ng-if="books.length > 0" class="bold">Books</div>
+        <ul class="list-group resources-menu">
+          <li class="list-group-item" ng-repeat="b in books">
+            <a href="{{b.url}}" target="_blank">
+              <i ng-class="b.icon" class="text-left"></i>
+              {{b.name}}
+            </a>
+          </li>
+        </ul>
+    <br ng-if="books.length > 0" />
+    <hr ng-if="books.length > 0" />
+    <br ng-if="books.length > 0" />
+        <div ng-if="videos.length > 0" class="bold">Videos</div>
+        <ul class="list-group resources-menu">
+          <li class="list-group-item" ng-repeat="v in videos">
+            <a href="{{v.url}}" target="_blank">
+              <i ng-class="v.icon" class="text-left"></i>
+              {{v.name}}
+            </a>
+          </li>
+        </ul>
+    <br ng-if="videos.length > 0" />
+    <hr ng-if="videos.length > 0" />
+    <br ng-if="videos.length > 0" />
+        <div ng-if="audio.length > 0">Our Library</div>
+        <small>These resources are available on the back wall of the sanctuary. Please feel free to borrow them.</small>
+        <input type="text" class="form-control" ng-model="search" placeholder="Search..." /><br />
+        <div ng-repeat="res in resLib | orderBy: 'name' | filter: search">
+            {{res.name}}
+        </div>
+    <br />
+    <hr />
+    <br />
+      </div>
+    </div>
+  </script>
+<!--/RESOURCES-->
 <!--SETTINGS-->
   <script type="text/ng-template" id="settings.html">
     <div class="page" ng-controller="SettingsCtrl">
@@ -120,7 +980,134 @@
         </div>
     </div>
   </script>
+  <script type="text/ng-template" id="settadm.html">
+    <div class="page" ng-controller="SettAdmCtrl">
+    <goback></goback>
+    <div class="col">
+        <div id="login-form" style="display: none;">
+            <div class="page-title">Login</div>
+            <table width="100%">
+                <tr>
+                    <td>Email:</td>
+                    <td>
+                        <input type="text" class="user-email form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pass:
+                    </td>
+                    <td>
+                        <input type="password" class="user-pass form-control" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <button class="btn btn-primary btn-block loginUser">Login</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="loader text-center">
+          <img src="assets/images/loader.gif" />
+        </div>
+        <div id="loggedin-only" style="display: none;">
+          <div style="position: absolute; right: 10px; top: -40px; z-index: 9999;"><button class="btn btn-link btn-sm logoutUser">Logout</button></div>
+          <!--ANN ADMIN-->
+          <h4 class="text-medium">Announcements:</h4>
+          <button class="btn btn-primary btn-block" ng-click="addAnnExpanded=toggle(addAnnExpanded)"><i class="fas fa-plus"></i>&nbsp;Add New</button>
+          <div ng-show="addAnnExpanded">
+            <br />
+            <!--<label for="title">Title:</label><br />-->
+            <input id="title" type="text" ng-model="newAnn.title" class="form-control" placeholder="Title" required /><br />
+            <!--<label for="desc">Description:</label><br />-->
+            <textarea id="desc" ng-model="newAnn.desc" type="text" rows="3" class="form-control" required placeholder="Description"></textarea><br />
+            <!--<label for="author">Author:</label><br />-->
+            <input id="author" type="text" ng-model="newAnn.author" class="form-control" placeholder="Author" /><br />
+            <i class="far fa-comment"></i>&nbsp;Notify via Push Message?&nbsp;
+            <label class="switch" ng-show="!editId">
+              <input type="checkbox" ng-model="newAnn.pushNotify" />
+              <span class="slider round"></span>
+            </label>
+            <br />
+            <i class="fas fa-upload"></i>&nbsp;Publish to Announcements Page?&nbsp;
+            <label class="switch">
+              <input type="checkbox" ng-model="newAnn.publishAnn" />
+              <span class="slider round"></span>
+            </label>
+            <br /><br />
+            <button ng-click="addNewAnn()" class="btn btn-primary btn-block" ng-show="!editId">Save</button>
+            <button ng-click="updateNewAnn()" class="btn btn-primary btn-block" ng-show="editId">Update</button>
+            <br />
+          </div>
+          <!--ANN LIST-->
+          <br /> 
+          <ul class="nav nav-pills nav-justified" style="border-bottom: 1px solid gray;">
+            <li class="nav-item"><a class="nav-link" ng-class="{'active':displayAnn==true}" href="#" ng-click="displayAnn=toggle(displayAnn)"><i class="fas fa-bullhorn"></i>&nbsp;Announcements</a></li>
+            <li class="nav-item"><a class="nav-link" ng-class="{'active':displayAnn==false}" href="#" ng-click="displayAnn=toggle(displayAnn)"><i class="fas fa-comment"></i>&nbsp;Push Msgs</a></li>
+          </ul>
+          <div ng-show="displayAnn">
+            <br />
+            <h5>Published:</h5>
+            <div ng-show="!adminAnns">There are no announcements right now.</div>
+            <div ng-repeat="ann in adminAnns | orderBy:'ord'" class="card card-block gray-bg" style="padding: 5px 10px;" ng-show="adminAnns">
+              <strong>{{ann.title}}</strong>
+              <div>{{ann.desc}}</div>
+              <div class="row">
+                <div class="text-left small gray col-6" ng-show="ann.ts">{{ann.ts | timeago}}</div>
+                <div class="text-right col-6" style="text-align: right;" ng-show="ann.author">&nbsp;&mdash;&nbsp;{{ann.author}}</div>
+              </div>
+              <div class="text-left">
+                <button class="btn btn-sm" ng-click="editAnn(ann.id)"><i class="fas fa-edit"></i>&nbsp;Edit</button>
+                <button class="btn btn-sm" ng-click="delAnn(ann.id)"><i class="fas fa-times"></i>&nbsp;Delete</button>
+                <button class="btn btn-sm" ng-click="moveUp(ann.id,ann.ord)"><i class="fas fa-arrow-up"></i>&nbsp;Up</button>
+                <button class="btn btn-sm" ng-click="moveDown(ann.id,ann.ord)"><i class="fas fa-arrow-down"></i>&nbsp;Down</button>
+              </div>
+            </div>
+            <br />
+          </div>
+          <!--PUSH NOTIFY-->
+          <div ng-show="!displayAnn">
+            <br />
+            <h5>Sent Notifications:</h5>
+            <div ng-show="!adminPN">There are no push notifications right now.</div>
+            <div ng-repeat="pn in adminPN | orderBy:'ts':true" class="nav-item" style="padding: 5px 10px;" ng-show="adminPN">
+            <hr />
+              <strong>{{pn.title}}</strong><br />
+              <div>{{pn.desc}}</div>
+              <div class="row">
+                <div class="text-left small gray col-6" ng-show="pn.ts">{{pn.ts | timeago}}</div>
+              </div>
+            </div>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
 <!--/SETTINGS-->
+<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-messaging.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyAE9TE6kDsX1N3zjX1ELf3lKjvjHD-wUmg",
+      authDomain: "whiteflagmobile.firebaseapp.com",
+      databaseURL: "https://whiteflagmobile.firebaseio.com",
+      projectId: "whiteflagmobile",
+      storageBucket: "whiteflagmobile.appspot.com",
+      messagingSenderId: "636514957068"
+    };
+    firebase.initializeApp(config);
+    const firestore = firebase.firestore();
+    const settings = {/* your settings... */ timestampsInSnapshots: true};
+    firestore.settings(settings);
+    const messaging = firebase.messaging();
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

@@ -1,41 +1,41 @@
 {
-  "name": "Ripple Missions",
-  "short_name":"Ripple Missions",
+  "name": "White Flag Mobile",
+  "short_name":"White Flag",
   "icons": [
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon48.png",
       "sizes": "48x48",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 1.0
     },
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon72.png",
       "sizes": "72x72",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 1.5
     },
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon96.png",
       "sizes": "96x96",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 2.0
     },
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon144.png",
       "sizes": "144x144",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 3.0
     },
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon192.png",
       "sizes": "192x192",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 4.0
     },
     {
-      "src": "/assets/images/ripple-logo-r.jpg",
+      "src": "https://whiteflagmobile.com/assets/images/app-icon512.png",
       "sizes": "512x512",
-      "type": "image/jpg",
+      "type": "image/png",
       "density": 5.0
     }
   ],

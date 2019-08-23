@@ -1,9 +1,9 @@
 {
-  "name": "Ripple Missions",
+  "name": "whiteflag-ng",
   "private": true,
   "version": "1.0.0",
-  "description": "Ripple Missions",
-  "repository": "https://github.com/rncrtr/ripple-app",
+  "description": "White Flag Calvary Mobile",
+  "repository": "https://github.com/rncrtr/whiteflag-ng",
   "license": "MIT",
   "devDependencies": {
     "http-server": "^0.11.1"

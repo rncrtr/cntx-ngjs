@@ -1,12 +1,24 @@
 'use strict';
 /* global angular */
 // Declare app level module which depends on views, and components
-angular.module('ripple', [
+angular.module('whiteflag', [
   'ngRoute',
-  'ripple.home',
-  'ripple.settings',
-  'ripple.about',
-  'ripple.bugs',
+  'whiteflag.lang',
+  'whiteflag.home',
+  'whiteflag.studies',
+  'whiteflag.devotions',
+  'whiteflag.news',
+  'whiteflag.settAdm',
+  'whiteflag.settings',
+  'whiteflag.about',
+  'whiteflag.bugs',
+  'whiteflag.svcs',
+  'whiteflag.give',
+  'whiteflag.prayer',
+  'whiteflag.foodbank',
+  'whiteflag.disc',
+  'whiteflag.missions',
+  'whiteflag.resources',
   'goback',
   'navMenu'
 ]).
@@ -16,7 +28,5 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
   $routeProvider.otherwise({redirectTo: '/home'});
 }])
 .controller('app',['$scope','$rootScope','DataService', function ($scope,$rootScope,DataService) {
-  $rootScope.churches = DataService.getChurches().then(function(resp){
-      console.log(resp);
-  });
+
 }]);
