@@ -3,12 +3,10 @@
 // Declare app level module which depends on views, and components
 angular.module('whiteflag', [
   'ngRoute',
-  'whiteflag.lang',
   'whiteflag.home',
   'whiteflag.studies',
+  'whiteflag.updates',
   'whiteflag.devotions',
-  'whiteflag.news',
-  'whiteflag.settAdm',
   'whiteflag.settings',
   'whiteflag.about',
   'whiteflag.bugs',

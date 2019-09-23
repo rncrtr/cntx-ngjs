@@ -11,6 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="White Flag Mobile">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
@@ -19,29 +20,6 @@
   <script type="text/javascript">
     window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
       heap.load("2622635395");
-  </script>
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-  <script>
-    var OneSignal = window.OneSignal || [];
-    OneSignal.push(function() {
-      OneSignal.init({
-        appId: "85591aee-e835-4756-9fb0-eaa2a8e6afdf",
-      });
-    });
-  </script>
-  <script>
-    // Detects if device is on iOS 
-    const isIos = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /iphone|ipad|ipod/.test( userAgent );
-    }
-    // Detects if device is in standalone mode
-    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-
-    // Checks if should display install popup notification:
-    if (isIos() && !isInStandaloneMode()) {
-      this.setState({ showInstallMessage: true });
-    }
   </script>
 </head>
 <body id="body">
@@ -94,25 +72,6 @@
     </div>
   </script>
 <!--/HOME-->
-<!--ANNOUNCEMENTS-->
-  <script type="text/ng-template" id="news.html">
-    <div class="page">
-        <goback></goback>
-        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
-        <div class="col">
-            <div class="page-title">Announcements</div>
-            <div ng-show="!anns" class="text-center"><img src="assets/images/loader.gif" /></div>
-            <div ng-show="!anns.length > 0">There are no announcements right now.</div>
-            <div ng-repeat="ann in anns" class="card card-block gray-bg" style="padding: 5px 10px;">
-              <strong class="size-medium">{{ann.title}}</strong>
-              <span>{{ann.desc}}</span>
-              <span class="text-left small gray" ng-show="ann.ts">{{ann.ts | timeago}}</span>
-              <span class="text-right" ng-show="ann.author">&nbsp;&mdash;&nbsp;{{ann.author}}</span>
-            </div>
-        </div>
-    </div>
-  </script>
-<!--/ANNOUNCEMENTS-->
 <!--STUDIES-->
   <script type="text/ng-template" id="studies.html">
     <div class="page" ng-controller="StudiesCtrl">
@@ -145,6 +104,32 @@
     </div>
   </script>
 <!--/STUDIES-->
+<!--UPDATES-->
+  <script type="text/ng-template" id="updates.html">
+    <div class="page">
+      <nav-menu></nav-menu>
+      <goback></goback>
+        <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
+        <div class="col">
+          <div class="page-title">Updates Subscribe Request</div>
+            <div class="updates-request">
+                Want to know what is happening at White Flag? We'll send you a weekly email with the latest news and an encouraging note from Pastor Shawn.<br /><br />
+                <input type="text" id="updatesName" class="form-control" ng-model="updatesName" placeholder="Name" /><br />
+                <label for="updatesRequest" class="bold">Email address is required.<span class="text-danger bold">*</span></label>
+                <input type="text" id="updatesEmail" class="form-control" ng-model="updatesEmail" placeholder="Email" /><br />
+                <div class="updates-error text-danger bold" ng-show="updatesError">Please enter your email to send this.</div>
+                <br />
+                <button class="btn btn-primary btn-block" ng-click="prepUpdatesRequest()" ng-show="!showResult">Send</button>
+                <span ng-show="showResult">
+                  {{updatesSentMsg}} If you have problems signing up or need help please call or text Pastor Shawn at 720.505.3808.
+                  <button class="btn btn-link btn-sm" ng-click="resetUpdatesForm()"><i class="fas fa-times"></i> Dismiss</button>
+                </span>  
+            </div>
+          <br /><br />
+        </div>
+    </div>
+  </script>
+<!--/UPDATES-->
 <!--DEVOTIONS-->
   <script type="text/ng-template" id="devotions.html">
     <div class="page" ng-controller="DevotionsCtrl">
@@ -281,44 +266,6 @@
         </p>
         <br /><hr /><br /><br />
     <div class="missions-section">
-      <div class="missions-photo photo-img-jpg">
-        <img class="photo-img wp-image-1224 size-medium" src="assets/images/missions/treu.jpg" alt="treu" itemprop="image" width="100%">
-      </div>
-      <p>
-        <b>
-          <span style="font-size: 24px;">Branden &amp; Ernie Treu</span>
-
-          <br>
-        </b>
-        <b>
-          <span style="font-size: 18px;">Ethan &amp; Silas</span>
-          <br>
-        </b>
-        <span style="font-weight: 400;">
-          <span style="font-size: 18px;">Calvary Cork</span>
-          <br>
-        </span>
-        <span style="font-size: 14px;">
-          <i>
-            <span style="font-weight: 400;">Children’s Ministry</span>
-          </i>
-        </span>
-      </p>
-      <p>
-        <b>Web:&nbsp;</b>
-        <a class="link" href="http://treuimage.com">
-          <span style="font-weight: 400;">treuimage.com
-            <br>
-          </span>
-        </a>
-        <b>Email: </b>
-        <a class="link" href="mailto:thetreus@treuimage.com">
-          <span style="font-weight: 400;">thetreus@treuimage.com</span>
-        </a>
-      </p>
-    </div><br />
-    <hr /><br /><br />
-    <div class="missions-section">
       <div class="missions-photo photo-img-png">
         <img src="assets/images/missions/fox.png" alt="fox" itemprop="image" width="100%">
       </div>
@@ -369,53 +316,6 @@
     </div><br />
     <hr /><br /><br />
     <div class="missions-section">
-      <div class="missions-photo photo-img-jpg">
-        <img class="photo-img wp-image-1226 size-medium" src="assets/images/missions/betts.jpg" alt="betts" itemprop="image" width="100%">
-      </div>
-      <p>
-        <span style="font-size: 24px;">
-          <b>Gary &amp; Carli Betts
-            <br>
-          </b>
-        </span>
-        <b>
-          <span style="font-size: 18px;">Ruth, Esther, &amp; Naomi</span>
-          <br>
-        </b>
-        <span style="font-weight: 400;">
-          <span style="font-size: 18px;">New Hope Calvary Chapel</span>
-          <br>
-        </span>
-        <span style="font-size: 14px;">
-          <i>
-            <span style="font-weight: 400;">Church Planting, Street Ministry</span>
-          </i>
-        </span>
-      </p>
-      <p>
-        <b>Web:</b>
-        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp;
-          <a class="link" href="http://stepsoffaith.me">stepsoffaith.me</a>
-          <br>
-        </span>
-        <b>Email: &nbsp;</b>
-        <a class="link" href="mailto:gary@stepsoffaith.me">
-          <span style="font-weight: 400;">gary@stepsoffaith.me</span>
-        </a>&nbsp;or
-        <span style="font-weight: 400;">
-          <a class="link" href="mailto:carli@stepsoffaith.me">carli@stepsoffaith.me</a>
-          <br>
-        </span>
-        <b>FB:</b>
-        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp; &nbsp;
-          <a class="link" href="http://facebook.com/stepsoffaith.me">facebook.com/stepsoffaith.me</a>
-        </span>
-      </p>
-    </div><br />
-    <hr />
-    <br /><br />
-
-    <div class="missions-section">
       <div class="missions-photo photo-img-png">
         <img class="photo-img wp-image-1233 size-medium" src="assets/images/missions/coupal.png" alt="coupal" itemprop="image" width="100%">
       </div>
@@ -447,46 +347,6 @@
     </div><br />
     <hr /><br /><br />
 
-    <div class="missions-section">
-      <div class="missions-photo photo-img-jpg">
-        <img class="photo-img wp-image-1227 size-medium" src="assets/images/missions/fouse.jpg" alt="fouse" itemprop="image" width="100%">
-      </div>
-      <p>
-        <span style="font-size: 24px;">
-          <b>Amanda Fouse</b>
-        </span>
-        <b>
-          <br>
-        </b>
-        <span style="font-weight: 400;">
-          <span style="font-size: 18px;">New Hope Calvary Chapel</span>
-          <br>
-        </span>
-        <span style="font-size: 14px;">
-          <i>
-            <span style="font-weight: 400;">Church Planting, Street Ministry</span>
-          </i>
-        </span>
-      </p>
-      <p>
-        <b>Web:</b>
-        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp;
-          <a class="link" href="http://amandainireland.com">amandainireland.com</a>
-          <br>
-        </span>
-        <b>Email: &nbsp;</b>
-        <a class="link" href="mailto:amandafouse94@icloud.com">
-          <span style="font-weight: 400;">amandafouse94@icloud.com
-            <br>
-          </span>
-        </a>
-        <b>FB:</b>
-        <span style="font-weight: 400;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          <a class="link" href="http://facebook.com/offtoireland">facebook.com/offtoireland</a>
-        </span>
-      </p>
-    </div><br />
-    <hr /><br /><br />
     <div class="missions-section">
       <div class="missions-photo photo-img-jpg">
         <img class="photo-img wp-image-1235 size-full" src="assets/images/missions/johnsons.jpg" alt="johnsons" itemprop="image" width="100%">
@@ -525,45 +385,6 @@
       <p>&nbsp;</p>
     </div><br />
     <hr /><br /><br />
-
-    <div class="missions-section">
-      <div class="missions-photo photo-img-jpg">
-        <img class="photo-img wp-image-1237 size-medium" src="assets/images/missions/matthews.jpg" alt="matthews" itemprop="image" width="100%" />
-      </div>
-      <p>
-        <b>
-          <span style="font-size: 24px;">Bob &amp; Cate Matthews</span>
-          <br>
-        </b>
-        <span style="font-weight: 400;">
-          <span style="font-size: 18px;">After The Storm 4 Christ</span>
-          <br>
-        </span>
-        <span style="font-size: 14px;">
-          <i>
-            <span style="font-weight: 400;">Disaster Recovery, Crisis Response</span>
-          </i>
-        </span>
-      </p>
-      <p>
-        <b>Web:</b>
-        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;
-          <a class="link" href="http://afterthestorm4christ.org">afterthestorm4christ.org</a>
-          <br>
-        </span>
-        <b>Email: &nbsp;</b>
-        <a class="link" href="mailto:relief@afterthestorm4christ.org">
-          <span style="font-weight: 400;">relief@afterthestorm4christ.org
-            <br>
-          </span>
-        </a>
-        <b>FB:</b>
-        <span style="font-weight: 400;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <a class="link" href="http://facebook.com/AftertheStorm4Christ">
-          <span style="font-weight: 400;">facebook.com/AftertheStorm4Christ</span>
-        </a>
-      </p>
-    </div>
     <div class="text-center">
         <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
     </div>
