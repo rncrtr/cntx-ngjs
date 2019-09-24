@@ -13,7 +13,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="White Flag Mobile">
     <script type="text/javascript">
-        // preload them images.
+        // preload them images
         preloads = "about,bugs,devos,disciple,foodbox,giving,lights,pray,renewal-banner,resources,studies,updates,world".split(",")
         var tempImg = []
         for(var x=0;x<preloads.length;x++) {
@@ -102,7 +102,7 @@
         </ul>
         </div>
         <div ng-if="currentStudy">
-            <ul class="list-group"><li class="list-group-item no-border"><a ng-click="setStudy(null)"><span class="fas fa-fw fa-chevron-left text-left"></span><span>Back</span></a></li></ul>
+            <ul class="list-group goback-top"><li class="list-group-item no-border"><a ng-click="setStudy(null)"><span class="fas fa-fw fa-chevron-left text-left"></span><span>Back</span></a></li></ul>
             <div class="sermonnet iframe-loader" style="width:500px;max-width:100%;">
               <iframe id="studyplayer" ng-src="{{setPlayerUrl(currentPlayer) | trustAsResourceUrl}}" name="sermon-frame" frameborder="0" width="100%" height="1000px" scrolling="yes" allowTransparency="true" allowfullscreen class="sermon-iframe">
                   <a ng-href="{{setPlayerUrl(currentPlayer) | trustAsResourceUrl}}"><p>Your browser does not support iFrames, please click here to access our media center.</p></a> 

@@ -651,9 +651,6 @@ angular.module('whiteflag.settings', [])
   }
 }])
 
-//SETTINGS ADMIN
-//////////////////////////////////////////////////////////
-
 .filter('timeago', function() {
         return function(input, p_allowFuture) {
     
