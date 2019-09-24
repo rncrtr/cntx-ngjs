@@ -37,6 +37,7 @@ h3{padding-top: 10px;}
 .goback-top{cursor: pointer;}
 .goback li,.goback-top li{background: #EF9C26;}
 .page{margin-top: 46px; padding: 0px; height: auto; position: relative; height: auto !important; min-height: 100%;}
+.page img:first-child:not('.wfc-hero'){height: 270px; background-color: #EF9C26;}
 .list-group-item i{ position: absolute; margin-top: 5px; right: 10px; }
 .list-group-item:first-child { border-radius: 0px !important; }
 a{ color: #000000 !important; }
