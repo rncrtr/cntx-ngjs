@@ -18,7 +18,8 @@ angular.module('whiteflag', [
   'whiteflag.missions',
   'whiteflag.resources',
   'goback',
-  'navMenu'
+  'navMenu',
+  'ngSanitize'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.html5Mode(true);

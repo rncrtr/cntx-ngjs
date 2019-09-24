@@ -1,4 +1,9 @@
 /* app css stylesheet */
+html, body{
+    margin: 0;
+  padding: 0;
+  height: 100%;
+}
 .hamburger{
   display: inline; 
   position: absolute; 
@@ -11,6 +16,8 @@
   width: 50px; 
   z-index: 99999;
 }
+.btn-primary{background-color: #EF9C26 !important; border-color: #EF9C26 !important;}
+.btn-link{color: #EF9C26 !important;}
 .hamburger a.menu-drop i{font-size: 18px !important;}
 html{height: 0px;}
 #wfc-menu{
@@ -26,7 +33,9 @@ html{height: 0px;}
 h3{padding-top: 10px;}
 .nav-link{ padding: 10px 10px !important; }
 .ext-link{ margin-left: 10px; }
-.page{margin-top: 46px; padding: 0px; height: auto;}
+.goback{top: 60px; position: absolute; z-index: 999; cursor: pointer;}
+.goback li{background: #EF9C26;}
+.page{margin-top: 46px; padding: 0px; height: auto; position: relative; height: auto !important; min-height: 100%;}
 .list-group-item i{ position: absolute; margin-top: 5px; right: 10px; }
 .list-group-item:first-child { border-radius: 0px !important; }
 a{ color: #000000 !important; }
@@ -36,6 +45,8 @@ a{ color: #000000 !important; }
 .iframe-loader {
   background:url(../assets/images/loader.gif) top center no-repeat;
 }
+.scrollbox{min-height: 100%; position: absolute; overflow-y: scroll; padding: 0px 15px;}
+.devos{margin-top: 10px;}
 .bold{font-weight: bold;}
 .nopad{padding-left: 0px !important; padding-right: 0px !important; }
 .pad5{padding-left: 5px; padding-right: 5px; }

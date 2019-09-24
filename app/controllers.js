@@ -4,7 +4,7 @@
 angular.module('goback', []).directive('goback', function() {
   return {
     template: 
-      '<ul class="list-group">'+
+      '<ul class="list-group goback">'+
           '<li class="list-group-item no-border">'+
               '<a href="/home">'+
                   '<span class="fas fa-fw fa-chevron-left text-left"></span>'+
@@ -55,7 +55,8 @@ angular.module('whiteflag').factory('DataService',['$http',function($http){
     deleteDoc: deleteDoc,
     reorder: reorder,
     sendpn: sendpn,
-    sendMail: sendMail
+    sendMail: sendMail,
+    getDevos: getDevos
   }
 
   function getList(coll){
@@ -120,6 +121,14 @@ angular.module('whiteflag').factory('DataService',['$http',function($http){
       console.log(coll+' ERROR:',error);
     });
   }
+    
+   function getDevos(){
+       return $http.post('https://dmckb6iqph.execute-api.us-east-1.amazonaws.com/dev/api/dailydevos').then(function(resp){
+            return resp.data.content;
+       },function(error){
+        console.log('ERROR: ',error);
+       })
+   }
 
 }]);
 
@@ -320,12 +329,14 @@ angular.module('whiteflag.devotions', [])
   $routeProvider.when('/devotions', { templateUrl: 'devotions.html', controller: 'DevotionsCtrl' });
 }])
 
-.controller('DevotionsCtrl', ['$scope',function($scope) {
-  
-    // if(window.location.hash.indexOf('devotions')!=-1) {
-    //   var url = 'http://livinginchrist.org/wp-content/media/dbdbg/dbdbg.php';
-    //   $('#devos').attr('src',url);
-    // }  
+.controller('DevotionsCtrl', ['$scope','DataService','$sce',function($scope,DataService,$sce) {
+    $scope.topBanner = 'devos.jpg';
+    DataService.getDevos().then(function(resp){
+        //console.log('NG',resp);
+        $scope.devos = '<div>'+resp.replace(/\u00A0/g,"<br /><br /></div><div>")+'</div>';
+    }).catch(function(err){
+        if(err) console.log(err);
+    });
 }]);
 
 // PRAYER
@@ -406,7 +417,7 @@ angular.module('whiteflag.about', ['ngRoute'])
 }])
 
 .controller('AboutCtrl', [function() {
-
+    $scope.topBanner = 'about.jpg';
 }]);
 
 // BUGS
@@ -418,7 +429,7 @@ angular.module('whiteflag.bugs', ['ngRoute'])
 }])
 
 .controller('BugsCtrl', [function() {
-
+    $scope.topBanner = 'bugs.jpg';
 }]);
 
 // SERVICES

@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="whiteflag" class="no-js">
 <head>
-  <base href="/">
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>White Flag Calvary</title>
-  <meta name="description" content="">
-  <meta name="theme-color" content="#333333">
-  <link rel="manifest" href="manifest.json" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="White Flag Mobile">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
-  <link rel="stylesheet" href="app.css">
-  <script type="text/javascript">window.version = '12-09-18-1102';</script>
-  <script type="text/javascript">
-    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
-      heap.load("2622635395");
-  </script>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>White Flag Calvary</title>
+    <meta name="description" content="">
+    <meta name="theme-color" content="#333333">
+    <link rel="manifest" href="manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="White Flag Mobile">
+    <script type="text/javascript">
+        // preload them images.
+        preloads = "about,bugs,devos,disciple,foodbox,giving,lights,pray,renewal-banner,resources,studies,updates,world".split(",")
+        var tempImg = []
+        for(var x=0;x<preloads.length;x++) {
+            tempImg[x] = new Image()
+            tempImg[x].src = '/assets/images/'+preloads[x]+".jpg"
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+    <link rel="stylesheet" href="app.css">
+    <script type="text/javascript">window.version = '12-09-18-1102';</script>
+    <script type="text/javascript">
+        window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+        heap.load("2622635395");
+    </script>
 </head>
 <body id="body">
   <div class="container-fluid" style="margin: 0; padding: 0px; margin-top: -50px;">
@@ -107,7 +116,6 @@
 <!--UPDATES-->
   <script type="text/ng-template" id="updates.html">
     <div class="page">
-      <nav-menu></nav-menu>
       <goback></goback>
         <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -135,12 +143,16 @@
     <div class="page" ng-controller="DevotionsCtrl">
       <goback></goback>
       <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
-        <div class="col">
+        <div class="col" height="100%">
           <div class="page-title">Devotions</div>
-            <iframe id="devos" src="https://ripplemissions.com/api/devotions.php" scrolling="yes" frameborder="0" width="100%" height="2000px"></iframe>
-          <div class="text-center">
-              <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
-          </div>
+          <div class="scrollbox">      
+              <div class="devos" ng-bind-html="devos"></div>
+              <div class="muted"><i>by Bob Hoekstra</i></div>
+              <div class="text-center">
+                  <div class="btn btn-link backtotop" onclick="window.scrollTo(0,0);">Back to Top ^</div>
+                <br /><br />
+              </div>
+          </div>  
           <br /><br />
         </div>
     </div>
@@ -149,7 +161,6 @@
 <!--PRAYER-->
   <script type="text/ng-template" id="prayer.html">
     <div class="page">
-      <nav-menu></nav-menu>
       <goback></goback>
         <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -190,7 +201,7 @@
                 Sermon series by Pastor Shawn Reinsel &mdash; and others &mdash; as noted. <br />
                 </p>
                 <p>Devotions by Bob Hoekstra from the book <em>Day by Day by Grace</em>. More information here: <a class="link" href="http://livinginchrist.org/">Living in Christ Ministries</a> </p>
-                <p>App Development donated by Ryan Carter at <a class="link" href="http://rncrtr.com">rncrtr.com</a></p>
+                <p>App Development donated by Ryan Carter at <a class="link" href="https://cartdrawnhorse.com">cartdrawnhorse.com</a></p>
                 <p>Our privacy policy is located <a class="link" href="http://whiteflagcalvary.org/privacy-policy">on our website</a>.</p>
                 <p>Photos by <a href="https://pixabay.com" class="link">Pixabay</a> and <a href="https://unsplash.com" class="link">Unsplash</a></p>
         </div>
@@ -205,7 +216,7 @@
         <div class="col">
             <div class="page-title">Bug Reports&nbsp;<i class="fas fa-bug"></i></div>
               <p><br />
-              Find a bug or spot a typo in our app? Oh noez! Have a question or suggestion for the app?<br /><br />Please email Ryan directly here: <a href="mailto:ryan@overthinkdev.com" class="link">ryan@overthinkdev.com</a>.</p>
+              Find a bug or spot a typo in our app? Oh noez! Have a question or suggestion for the app?<br /><br />Please email Ryan directly here: <a href="mailto:me@rncrtr.xyz" class="link">me@rncrtr.xyz</a>.</p>
 
               <p>
               We want to provide the best experience possible for you, so please let us know how we can improve.
@@ -222,7 +233,6 @@
 <!--SERVICES-->
   <script type="text/ng-template" id="services.html">
     <div class="page" ng-controller="ServicesCtrl">
-      <nav-menu></nav-menu>
       <goback></goback>    
       <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -255,7 +265,6 @@
 <!--MISSIONS-->
   <script type="text/ng-template" id="missions.html">
     <div class="page">
-        <nav-menu></nav-menu>
         <goback></goback>
         <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -476,7 +485,6 @@
 <!--DISCIPLESHIP-->
   <script type="text/ng-template" id="discipleship.html">
     <div class="page">
-        <nav-menu></nav-menu>
         <goback></goback>
         <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -734,7 +742,6 @@
 <!--RESOURCES-->
   <script type="text/ng-template" id="resources.html">
     <div class="page">
-        <nav-menu></nav-menu>
         <goback></goback>
         <img ng-if="topBanner" width="100%" ng-src="assets/images/{{topBanner}}" />
         <div class="col">
@@ -796,115 +803,9 @@
             <div class="page-title">Settings</div>
             <div class="page-title">Push Notifications</div>
             <p>
-                If you would like to receive live updates, you can enable that here. Otherwise, you won't see the updates on your phone unless you click on the Announcements page. Should these updates be turned on?
+                If you would like to receive live updates, you can enable that here. Should these updates be turned on?
             </p>
         </div>
-    </div>
-  </script>
-  <script type="text/ng-template" id="settadm.html">
-    <div class="page" ng-controller="SettAdmCtrl">
-    <goback></goback>
-    <div class="col">
-        <div id="login-form" style="display: none;">
-            <div class="page-title">Login</div>
-            <table width="100%">
-                <tr>
-                    <td>Email:</td>
-                    <td>
-                        <input type="text" class="user-email form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Pass:
-                    </td>
-                    <td>
-                        <input type="password" class="user-pass form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        <button class="btn btn-primary btn-block loginUser">Login</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="loader text-center">
-          <img src="assets/images/loader.gif" />
-        </div>
-        <div id="loggedin-only" style="display: none;">
-          <div style="position: absolute; right: 10px; top: -40px; z-index: 9999;"><button class="btn btn-link btn-sm logoutUser">Logout</button></div>
-          <!--ANN ADMIN-->
-          <h4 class="text-medium">Announcements:</h4>
-          <button class="btn btn-primary btn-block" ng-click="addAnnExpanded=toggle(addAnnExpanded)"><i class="fas fa-plus"></i>&nbsp;Add New</button>
-          <div ng-show="addAnnExpanded">
-            <br />
-            <!--<label for="title">Title:</label><br />-->
-            <input id="title" type="text" ng-model="newAnn.title" class="form-control" placeholder="Title" required /><br />
-            <!--<label for="desc">Description:</label><br />-->
-            <textarea id="desc" ng-model="newAnn.desc" type="text" rows="3" class="form-control" required placeholder="Description"></textarea><br />
-            <!--<label for="author">Author:</label><br />-->
-            <input id="author" type="text" ng-model="newAnn.author" class="form-control" placeholder="Author" /><br />
-            <i class="far fa-comment"></i>&nbsp;Notify via Push Message?&nbsp;
-            <label class="switch" ng-show="!editId">
-              <input type="checkbox" ng-model="newAnn.pushNotify" />
-              <span class="slider round"></span>
-            </label>
-            <br />
-            <i class="fas fa-upload"></i>&nbsp;Publish to Announcements Page?&nbsp;
-            <label class="switch">
-              <input type="checkbox" ng-model="newAnn.publishAnn" />
-              <span class="slider round"></span>
-            </label>
-            <br /><br />
-            <button ng-click="addNewAnn()" class="btn btn-primary btn-block" ng-show="!editId">Save</button>
-            <button ng-click="updateNewAnn()" class="btn btn-primary btn-block" ng-show="editId">Update</button>
-            <br />
-          </div>
-          <!--ANN LIST-->
-          <br /> 
-          <ul class="nav nav-pills nav-justified" style="border-bottom: 1px solid gray;">
-            <li class="nav-item"><a class="nav-link" ng-class="{'active':displayAnn==true}" href="#" ng-click="displayAnn=toggle(displayAnn)"><i class="fas fa-bullhorn"></i>&nbsp;Announcements</a></li>
-            <li class="nav-item"><a class="nav-link" ng-class="{'active':displayAnn==false}" href="#" ng-click="displayAnn=toggle(displayAnn)"><i class="fas fa-comment"></i>&nbsp;Push Msgs</a></li>
-          </ul>
-          <div ng-show="displayAnn">
-            <br />
-            <h5>Published:</h5>
-            <div ng-show="!adminAnns">There are no announcements right now.</div>
-            <div ng-repeat="ann in adminAnns | orderBy:'ord'" class="card card-block gray-bg" style="padding: 5px 10px;" ng-show="adminAnns">
-              <strong>{{ann.title}}</strong>
-              <div>{{ann.desc}}</div>
-              <div class="row">
-                <div class="text-left small gray col-6" ng-show="ann.ts">{{ann.ts | timeago}}</div>
-                <div class="text-right col-6" style="text-align: right;" ng-show="ann.author">&nbsp;&mdash;&nbsp;{{ann.author}}</div>
-              </div>
-              <div class="text-left">
-                <button class="btn btn-sm" ng-click="editAnn(ann.id)"><i class="fas fa-edit"></i>&nbsp;Edit</button>
-                <button class="btn btn-sm" ng-click="delAnn(ann.id)"><i class="fas fa-times"></i>&nbsp;Delete</button>
-                <button class="btn btn-sm" ng-click="moveUp(ann.id,ann.ord)"><i class="fas fa-arrow-up"></i>&nbsp;Up</button>
-                <button class="btn btn-sm" ng-click="moveDown(ann.id,ann.ord)"><i class="fas fa-arrow-down"></i>&nbsp;Down</button>
-              </div>
-            </div>
-            <br />
-          </div>
-          <!--PUSH NOTIFY-->
-          <div ng-show="!displayAnn">
-            <br />
-            <h5>Sent Notifications:</h5>
-            <div ng-show="!adminPN">There are no push notifications right now.</div>
-            <div ng-repeat="pn in adminPN | orderBy:'ts':true" class="nav-item" style="padding: 5px 10px;" ng-show="adminPN">
-            <hr />
-              <strong>{{pn.title}}</strong><br />
-              <div>{{pn.desc}}</div>
-              <div class="row">
-                <div class="text-left small gray col-6" ng-show="pn.ts">{{pn.ts | timeago}}</div>
-              </div>
-            </div>
-            <br />
-          </div>
-        </div>
-      </div>
     </div>
   </script>
 <!--/SETTINGS-->
@@ -931,6 +832,7 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.0/angular-sanitize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="jquery.fn.js"></script>
   <script src="app.js"></script>
