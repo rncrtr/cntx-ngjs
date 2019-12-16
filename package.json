@@ -2,7 +2,7 @@
   "name": "alloy-ngjs",
   "private": true,
   "version": "1.0.0",
-  "description": "White Flag Calvary Mobile",
+  "description": "Alloy NGJS Starter kit",
   "repository": "https://github.com/rncrtr/alloy-ngjs",
   "license": "MIT",
   "devDependencies": {
