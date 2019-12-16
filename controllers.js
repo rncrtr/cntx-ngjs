@@ -15,27 +15,6 @@ angular.module('goback', []).directive('goback', function() {
   };
 });
 
-angular.module('navMenu', []).directive('navMenu', function() {
-  return {
-    template: 
-      '<ul id="wfc-menu" class="nav col-12-sm nopad">'+
-        '<li class="nav-item col-2-sm">'+
-          '<a class="nav-link text-white" href="/home">Home</a>'+
-        '</li>'+
-        '<li class="nav-item col-2-sm">'+
-          '<a class="nav-link text-white" href="/studies">Studies</a>'+
-        '</li>'+
-        '<li class="nav-item col-2-sm">'+
-          '<a class="nav-link text-white" href="/devotions">Devotions</a>'+
-        '</li>'+
-        '<li class="nav-item col-2-sm">'+
-          '<a class="nav-link text-white" href="/prayer">Prayer</a>'+
-        '</li>'+
-        
-      '</ul>'
-  };
-});
-
 /* 
 '<li class="hamburger" class="nav-item">' +
   '<a class="text-white menu-drop" href=""><i class="fas fa-fw fa-bars"></i></a>' +
@@ -44,8 +23,8 @@ angular.module('navMenu', []).directive('navMenu', function() {
 
 //////////////////////////////////////////////////
 // DATA SERVICE
-angular.module('whiteflag').factory('DataService',['$http',function($http){
-  var BASE_URL = 'https://whiteflagmobile.com/api/';
+angular.module('alloy').factory('DataService',['$http',function($http){
+  var BASE_URL = 'https://example.com/api/';
   var config = {"Content-Type":"application/json"};
   return {
     BASE_URL: BASE_URL,
