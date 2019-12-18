@@ -1,76 +1,3 @@
-'use strict';
-
-//////////////////////////////////////////////////
-// DATA SERVICE
-angular.module('alloy').factory('DataService',['$http',function($http){
-  var BASE_URL = 'http://localhost:3005/v1/';
-  var config = {"Content-Type":"application/json"};
-  return {
-    BASE_URL: BASE_URL,
-    getList: getList,
-    addDoc: addDoc,
-    updateDoc: updateDoc,
-    deleteDoc: deleteDoc,
-    reorder: reorder,
-    sendMail: sendMail,
-  }
-
-  function getList(coll){
-    return $http.get(BASE_URL+coll,config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-  function addDoc(coll,data){
-    return $http.post(BASE_URL+coll+'/add',{"data": data},config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-  function updateDoc(coll,id,data){
-    return $http.put(BASE_URL+coll+'/'+id,{"data": data},config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-  function deleteDoc(coll,id){
-    return $http.delete(BASE_URL+coll+'/'+id,config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-  function reorder(coll,id,ord){
-    return $http.post(BASE_URL+coll+'/'+id+'/reorder',{"data": ord},config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-  function sendMail(data){
-    return $http.post(BASE_URL+'sendmail',{data},config).then(function(resp){
-      var respData = resp.data;
-      return respData;
-    },function(error){
-      console.log(coll+' ERROR:',error);
-    });
-  }
-
-}]);
-
 /////////////////////////////////////////////////
 // HOME
 angular.module('alloy.home', [])
@@ -82,12 +9,108 @@ angular.module('alloy.home', [])
   });
 }])
 
-.controller('HomeCtrl', ['$scope','DataService', function ($scope,DataService) {
-    DataService.getList('notes').then(function(resp){
-      console.log(resp);
-      $scope.notes = resp;
-    });
+.controller('HomeCtrl', ['$scope','DataService','textAngularManager', function ($scope,DataService,txtNg) {
+    console.log(txtNg.getVersion());
+
+    $scope.currentCtx = 0;
+    $scope.newNoteData = {title:null,content:null};
+    $scope.err = 0;
+    $scope.errMsgs = [];
+    $scope.setFilter = function(ctx){
+      var thisCntx = $scope.cntxs.filter((el) => el._id == ctx);
+      //console.log('thisCntx',thisCntx);
+      if(thisCntx && thisCntx[0]){
+        $scope.currentCtx = thisCntx[0];
+      }else{
+        $scope.currentCtx = null;
+      }
+      if(ctx == null){
+        getNotes();
+      }else{
+        getNotesByCntx($scope.currentCtx._id);
+      }
+    };
+
+    $scope.newNote = function(){
+      var data = {};
+      data.name = toErr($scope.newNoteData.title,'Required: Note Name is blank');
+      data.content = toErr($scope.newNoteData.content,'Required: Note content is empty');
+      data.cntxId = $scope.currentCtx._id;
+      data.ts = createTS();
+      console.log(data);
+      if($scope.err==0){
+        DataService.addDoc('notes',data).then(function(resp){
+          console.log(resp);
+          $scope.toggle('.new-note');
+          getNotesByCntx($scope.currentCtx._id);
+        });
+      }else{
+        $scope.toggle('.errors');
+        $scope.newNoteData = null;
+        $('.new-note-save').prop('disabled', true);
+      }
+    }
+
+    function toErr(value,msg){
+      if(value){
+        return value;
+      }else{
+        $scope.err++;
+        $scope.errMsgs.push(msg);
+        return null;
+      }
+    }
+
+    $scope.toggle = function(toggleSelector){
+      $(toggleSelector).toggle();
+    }
+
+    function createTS(){
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+
+      var yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = '0' + dd;
+      } 
+      if (mm < 10) {
+        mm = '0' + mm;
+      } 
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      var today = yyyy+'-'+mm+'-'+dd+' '+h+':'+m+':'+s;
+      return today;
+    }
+
+    function getNotes(){
+      DataService.getList('notes').then(function(resp){
+        console.log('Notes: ',resp);
+        $scope.notes = resp;
+      });
+    }
+
+    function getNotesByCntx(ctx){
+      DataService.getListByCntx('notes',ctx).then(function(resp){
+        console.log('Notes: ',resp);
+        $scope.notes = resp;
+      });
+    }
+    
+    function getCntxs(){
+      DataService.getList('cntxs').then(function(resp){
+        console.log('Cntxs: ',resp);
+        $scope.cntxs = resp;
+      });
+    }
+
+    // init
+    getCntxs();
+    getNotes();
 }]);
+
+
 
 // Email
 //////////////////////////////////////////////////////////
@@ -157,71 +180,71 @@ angular.module('alloy.form',[])
 }]);
 
 // filters
-// .filter('timeago', function() {
-//   return function(input, p_allowFuture) {
+angular.module('alloy').filter('timeago', function() {
+  return function(input, p_allowFuture) {
 
-//       var substitute = function (stringOrFunction, number, strings) {
-//               var string = angular.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
-//               var value = (strings.numbers && strings.numbers[number]) || number;
-//               return string.replace(/%d/i, value);
-//           },
-//           nowTime = (new Date()).getTime(),
-//           date = (new Date(input)).getTime(),
-//           //refreshMillis= 6e4, //A minute
-//           allowFuture = p_allowFuture || false,
-//           strings= {
-//               prefixAgo: '',
-//               prefixFromNow: '',
-//               suffixAgo: "ago",
-//               suffixFromNow: "from now",
-//               seconds: "less than a minute",
-//               minute: "about a minute",
-//               minutes: "%d minutes",
-//               hour: "about an hour",
-//               hours: "about %d hours",
-//               day: "a day",
-//               days: "%d days",
-//               month: "about a month",
-//               months: "%d months",
-//               year: "about a year",
-//               years: "%d years"
-//           },
-//           dateDifference = nowTime - date,
-//           words,
-//           seconds = Math.abs(dateDifference) / 1000,
-//           minutes = seconds / 60,
-//           hours = minutes / 60,
-//           days = hours / 24,
-//           years = days / 365,
-//           separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
+      var substitute = function (stringOrFunction, number, strings) {
+              var string = angular.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
+              var value = (strings.numbers && strings.numbers[number]) || number;
+              return string.replace(/%d/i, value);
+          },
+          nowTime = (new Date()).getTime(),
+          date = (new Date(input)).getTime(),
+          //refreshMillis= 6e4, //A minute
+          allowFuture = p_allowFuture || false,
+          strings= {
+              prefixAgo: '',
+              prefixFromNow: '',
+              suffixAgo: "ago",
+              suffixFromNow: "from now",
+              seconds: "less than a minute",
+              minute: "about a minute",
+              minutes: "%d minutes",
+              hour: "about an hour",
+              hours: "about %d hours",
+              day: "a day",
+              days: "%d days",
+              month: "about a month",
+              months: "%d months",
+              year: "about a year",
+              years: "%d years"
+          },
+          dateDifference = nowTime - date,
+          words,
+          seconds = Math.abs(dateDifference) / 1000,
+          minutes = seconds / 60,
+          hours = minutes / 60,
+          days = hours / 24,
+          years = days / 365,
+          separator = strings.wordSeparator === undefined ?  " " : strings.wordSeparator,
       
           
-//           prefix = strings.prefixAgo,
-//           suffix = strings.suffixAgo;
+          prefix = strings.prefixAgo,
+          suffix = strings.suffixAgo;
           
-//       if (allowFuture) {
-//           if (dateDifference < 0) {
-//               prefix = strings.prefixFromNow;
-//               suffix = strings.suffixFromNow;
-//           }
-//       }
+      if (allowFuture) {
+          if (dateDifference < 0) {
+              prefix = strings.prefixFromNow;
+              suffix = strings.suffixFromNow;
+          }
+      }
 
-//       words = seconds < 45 && substitute(strings.seconds, Math.round(seconds), strings) ||
-//       seconds < 90 && substitute(strings.minute, 1, strings) ||
-//       minutes < 45 && substitute(strings.minutes, Math.round(minutes), strings) ||
-//       minutes < 90 && substitute(strings.hour, 1, strings) ||
-//       hours < 24 && substitute(strings.hours, Math.round(hours), strings) ||
-//       hours < 42 && substitute(strings.day, 1, strings) ||
-//       days < 30 && substitute(strings.days, Math.round(days), strings) ||
-//       days < 45 && substitute(strings.month, 1, strings) ||
-//       days < 365 && substitute(strings.months, Math.round(days / 30), strings) ||
-//       years < 1.5 && substitute(strings.year, 1, strings) ||
-//       substitute(strings.years, Math.round(years), strings);
-//   //console.log(prefix+words+suffix+separator);
-//   prefix.replace(/ /g, '')
-//   words.replace(/ /g, '')
-//   suffix.replace(/ /g, '')
-//   return (prefix+' '+words+' '+suffix+' '+separator);
+      words = seconds < 45 && substitute(strings.seconds, Math.round(seconds), strings) ||
+      seconds < 90 && substitute(strings.minute, 1, strings) ||
+      minutes < 45 && substitute(strings.minutes, Math.round(minutes), strings) ||
+      minutes < 90 && substitute(strings.hour, 1, strings) ||
+      hours < 24 && substitute(strings.hours, Math.round(hours), strings) ||
+      hours < 42 && substitute(strings.day, 1, strings) ||
+      days < 30 && substitute(strings.days, Math.round(days), strings) ||
+      days < 45 && substitute(strings.month, 1, strings) ||
+      days < 365 && substitute(strings.months, Math.round(days / 30), strings) ||
+      years < 1.5 && substitute(strings.year, 1, strings) ||
+      substitute(strings.years, Math.round(years), strings);
+  //console.log(prefix+words+suffix+separator);
+  prefix.replace(/ /g, '')
+  words.replace(/ /g, '')
+  suffix.replace(/ /g, '')
+  return (prefix+' '+words+' '+suffix+' '+separator);
       
-//   };
-// });
+  };
+});
