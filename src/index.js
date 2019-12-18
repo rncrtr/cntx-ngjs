@@ -1,7 +1,6 @@
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import passport from 'passport';
 const LocalStrategy = require('passport-local').Strategy;
 

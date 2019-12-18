@@ -28,3 +28,30 @@ $ chmod a+x mongod
 
 ## Run it:
 $ ./mongod
+
+# Acounts:
+
+# Register
+POST /v1/account/register
+
+Postman: raw/json
+{
+	"email": "ryan@ryan.com",
+	"password": "123456"
+}
+
+You should see: 
+Successfully created new account.
+
+# Login
+POST /v1/account/login
+Postman: raw/json
+{
+	"email": "rncrtr@me.com",
+	"password": "123456"
+}
+
+you should get back a token:
+{
+    "token": "XYZXYZXYZ"
+}

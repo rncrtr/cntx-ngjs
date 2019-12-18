@@ -28,7 +28,6 @@ export default ({config, db}) => {
         });
     });
     
-    
     // POST /v1/account/login
     api.post('/login',passport.authenticate(
         'local', {
@@ -44,6 +43,7 @@ export default ({config, db}) => {
        res.status(200).send('Successfully logged out.');
     });
     
+    // GET /v1/account/me
     api.get('/me',authenticate, (req,res) => {
         res.status(200).json(res.user);
     });

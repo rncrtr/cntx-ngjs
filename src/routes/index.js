@@ -4,7 +4,8 @@ import middleware from '../middleware';
 import initializeDb from '../db';
 import cors from 'cors';
 
-import variable from '../controller/variable';
+import note from '../controller/note';
+import cntx from '../controller/cntx';
 import account from '../controller/account';
 
 let router = express();
@@ -19,8 +20,8 @@ initializeDb(db => {
    
    // api routes v1
    router.use('/account', account({config,db}));
-   router.use('/variable', variable({config,db}));
-   
+   router.use('/notes', note({config,db}));
+   router.use('/cntxs', cntx({config,db}));
 });
 
 export default router;
