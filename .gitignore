@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 # Created by https://www.gitignore.io/api/node
-
+tmp
+.idea
+.env
+.DS_Store
+!.gitkeep
 ### Node ###
 # Logs
 logs
@@ -33,6 +38,7 @@ build/Release
 # Dependency directories
 node_modules
 jspm_packages
+bower_components
 
 # Optional npm cache directory
 .npm

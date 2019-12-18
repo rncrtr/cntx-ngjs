@@ -1,0 +1,16 @@
+/* app css stylesheet */
+body, .new-note, .new-context{
+  background: #000;
+  color: #FFF;
+}
+body h1,h2,h3,h4,h5{
+  color: #FFF;
+}
+
+.editor{
+  color: #000;
+}
+
+.editor h1, .editor h2, .editor h3, .editor h4, .editor h5{
+  color: #000;
+}
