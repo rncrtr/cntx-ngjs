@@ -1,4 +1,4 @@
-# CNTX API
+# CNTX NGJS
 
 ## Instructions
 
