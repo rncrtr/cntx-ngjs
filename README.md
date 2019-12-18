@@ -1,4 +1,4 @@
-# Alloy NGJS Starter Kit
+# CNTX NGJS
 _____
 
 ## Installing Dependencies
