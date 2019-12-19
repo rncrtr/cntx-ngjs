@@ -1,16 +1,56 @@
 /* app css stylesheet */
-body, .new-note, .new-context{
-  background: #000;
-  color: #FFF;
-}
-body h1,h2,h3,h4,h5{
-  color: #FFF;
+.md-preview{
+  height: 250px;
 }
 
-.editor{
-  color: #000;
+pre code{
+  padding: 5px;
+  background: #E6E6FA;
+  display: inline-block;
 }
 
-.editor h1, .editor h2, .editor h3, .editor h4, .editor h5{
-  color: #000;
+.note-block{
+  padding-left: 5px;
+  padding-right: 5px;
+  background: #F0F8FF;
+  border-radius: 5px;
+}
+
+.cntxlist, .cntxlist li{
+  margin-left: 0px;
+  padding-left: 0px;
+  list-style: none;
+}
+.nobullet{
+  list-style: none;
+}
+
+
+/* DRAG AND DROP */
+/*** The dnd-list should always have a min-height, otherwise you can't drop to it once it's empty */
+ .cntx-list-container ul[dnd-list] {
+  min-height: 32px;
+  padding-left: 0px;
+}
+
+/*** The dndDraggingSource class will be applied to the source element of a drag operation. It makes sense to hide it to give the user the feeling that he's actually moving it. */
+.cntx-list-container ul[dnd-list] .dndDraggingSource {
+  display: none;
+}
+
+/*** An element with .dndPlaceholder class will be added to the dnd-list while the user is dragging over it. */
+.cntx-list-container ul[dnd-list] .dndPlaceholder {
+  background-color: #ddd;
+  display: block;
+  min-height: 32px;
+}
+
+.cntx-list-container ul[dnd-list] li {
+  background-color: #fff;
+  border: 0px solid #ddd;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  display: block;
+  padding: 0px 15px;
+  margin-bottom: -1px;
 }

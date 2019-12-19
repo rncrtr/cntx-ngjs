@@ -4,7 +4,9 @@
 angular.module('alloy', [
   'ngRoute',
   'alloy.home',
-  'textAngular'
+  'ngSanitize',
+  'ng-showdown',
+  'dndLists'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.html5Mode(true);
@@ -57,7 +59,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
   }
 
   function updateDoc(coll,id,data){
-    return $http.put(BASE_URL+coll+'/'+id,{"data": data},config).then(function(resp){
+    return $http.put(BASE_URL+coll+'/'+id,data,config).then(function(resp){
       var respData = resp.data;
       return respData;
     },function(error){
@@ -74,8 +76,8 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
     });
   }
 
-  function reorder(coll,id,ord){
-    return $http.post(BASE_URL+coll+'/'+id+'/reorder',{"data": ord},config).then(function(resp){
+  function reorder(coll,data){
+    return $http.put(BASE_URL+coll+'/reorder',data,config).then(function(resp){
       var respData = resp.data;
       return respData;
     },function(error){

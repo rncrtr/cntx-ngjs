@@ -9,45 +9,92 @@ angular.module('alloy.home', [])
   });
 }])
 
-.controller('HomeCtrl', ['$scope','DataService','textAngularManager', function ($scope,DataService,txtNg) {
-    console.log(txtNg.getVersion());
-
-    $scope.currentCtx = 0;
-    $scope.newNoteData = {title:null,content:null};
-    $scope.err = 0;
-    $scope.errMsgs = [];
-    $scope.setFilter = function(ctx){
-      var thisCntx = $scope.cntxs.filter((el) => el._id == ctx);
+.controller('HomeCtrl', ['$scope','DataService', function ($scope,DataService) {
+    let vm = $scope;
+    vm.currentCtx = 0;
+    vm.newNoteData = {title:null,content:null};
+    vm.newCntxData = {title:null};
+    vm.err = 0;
+    vm.errMsgs = [];
+    vm.errMsgsCntx = [];
+    vm.defaultTitles = ['Notes','Thoughts','Things','Bits','Snippets','Blips','Blurbs'];
+    vm.currentTitle = vm.defaultTitles[Math.floor(Math.random()*vm.defaultTitles.length)];
+    console.log(vm.currentTitle);
+    vm.setFilter = function(ctx){
+      var thisCntx = vm.cntxs.filter((el) => el._id == ctx);
       //console.log('thisCntx',thisCntx);
       if(thisCntx && thisCntx[0]){
-        $scope.currentCtx = thisCntx[0];
+        vm.currentCtx = thisCntx[0];
       }else{
-        $scope.currentCtx = null;
+        vm.currentCtx = null;
       }
       if(ctx == null){
         getNotes();
       }else{
-        getNotesByCntx($scope.currentCtx._id);
+        getNotesByCntx(vm.currentCtx._id);
       }
     };
 
-    $scope.newNote = function(){
+    vm.newNote = function(){
       var data = {};
-      data.name = toErr($scope.newNoteData.title,'Required: Note Name is blank');
-      data.content = toErr($scope.newNoteData.content,'Required: Note content is empty');
-      data.cntxId = $scope.currentCtx._id;
+      data.content = toErr(vm.newNoteData.content,'Required: Note content is empty');
+      data.cntxId = vm.currentCtx._id;
       data.ts = createTS();
       console.log(data);
-      if($scope.err==0){
+      if(vm.err==0){
         DataService.addDoc('notes',data).then(function(resp){
           console.log(resp);
-          $scope.toggle('.new-note');
-          getNotesByCntx($scope.currentCtx._id);
+          vm.toggle('.new-note');
+          getNotesByCntx(vm.currentCtx._id);
         });
       }else{
-        $scope.toggle('.errors');
-        $scope.newNoteData = null;
+        vm.toggle('.errors');
+        vm.newNoteData = null;
         $('.new-note-save').prop('disabled', true);
+      }
+    }
+
+    vm.newCntx = function(){
+      var data = {};
+      data.name = toErr(vm.newCntxData.title,'Required: Cntx name is blank');
+      data.ts = createTS();
+      data.ord = vm.cntxs.length + 1;
+      console.log(data);
+      if(vm.err==0){
+        DataService.addDoc('cntxs',data).then(function(resp){
+          console.log(resp);
+          vm.toggle('.new-cntx');
+          getCntxs();
+        });
+      }else{
+        vm.toggle('.errors-cntx');
+        vm.newCntxData = null;
+        $('.new-cntx-save').prop('disabled', true);
+      }
+    }
+
+    vm.reorderCntx = function(){
+      console.log($scope.cntxs);
+      let cnt = 0;
+      $scope.cntxs.forEach(element => {
+        element.ord = cnt;
+        DataService.updateDoc('cntxs',element._id,element).then(function(resp){
+          console.log(resp);
+        });
+        cnt++;
+      });
+    }
+
+    vm.deleteCntx = function(currCntx){
+      var verify = confirm('Are you sure you want to delete '+currCntx.name+'? \r\n (Orphaned notes will not be deleted)');
+      if(verify){
+        console.log('Ka-boom! implosion of cntx');
+        DataService.deleteDoc('cntxs',currCntx._id).then(function(resp){
+          console.log(resp);
+          getCntxs();
+        });
+      }else{
+        console.log('then again maybe not');
       }
     }
 
@@ -55,14 +102,17 @@ angular.module('alloy.home', [])
       if(value){
         return value;
       }else{
-        $scope.err++;
-        $scope.errMsgs.push(msg);
+        vm.err++;
+        vm.errMsgs.push(msg);
         return null;
       }
     }
 
-    $scope.toggle = function(toggleSelector){
+    vm.toggle = function(toggleSelector,clearControl){
       $(toggleSelector).toggle();
+      if(toggleSelector=='.new-note' && clearControl){
+        vm.newNoteData = null;
+      }
     }
 
     function createTS(){
@@ -71,12 +121,8 @@ angular.module('alloy.home', [])
       var mm = today.getMonth() + 1; //January is 0!
 
       var yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = '0' + dd;
-      } 
-      if (mm < 10) {
-        mm = '0' + mm;
-      } 
+      if (dd < 10) {dd = '0' + dd;} 
+      if (mm < 10) {mm = '0' + mm;} 
       var h = today.getHours();
       var m = today.getMinutes();
       var s = today.getSeconds();
@@ -87,21 +133,21 @@ angular.module('alloy.home', [])
     function getNotes(){
       DataService.getList('notes').then(function(resp){
         console.log('Notes: ',resp);
-        $scope.notes = resp;
+        vm.notes = resp;
       });
     }
 
     function getNotesByCntx(ctx){
       DataService.getListByCntx('notes',ctx).then(function(resp){
         console.log('Notes: ',resp);
-        $scope.notes = resp;
+        vm.notes = resp;
       });
     }
     
     function getCntxs(){
       DataService.getList('cntxs').then(function(resp){
         console.log('Cntxs: ',resp);
-        $scope.cntxs = resp;
+        vm.cntxs = resp;
       });
     }
 
@@ -121,60 +167,61 @@ angular.module('alloy.form',[])
 }])
 
 .controller('FormCtrl', ['$scope','$http','DataService', function($scope, $http, DataService) {
-  $scope.blanks = [undefined,null,''];
-  $scope.emailError = false;
-  $scope.emailData = {
+  let vm = $scope;
+  vm.blanks = [undefined,null,''];
+  vm.emailError = false;
+  vm.emailData = {
     subject: '',
     to: '',
     from: '',
     html: ''
   };
 
-  $scope.prepEmailRequest = function(){
-    $scope.emailError = false;
-    $scope.emailHtml = '';
-    $scope.emailHtml += "<div>Form details:</div><br /><br />";
-    if($scope.blanks.indexOf($scope.emailName)==-1){
-      $scope.emailHtml += '<div><b>Name:</b>&nbsp;&nbsp;' + $scope.emailName + '</div>';
+  vm.prepEmailRequest = function(){
+    vm.emailError = false;
+    vm.emailHtml = '';
+    vm.emailHtml += "<div>Form details:</div><br /><br />";
+    if(vm.blanks.indexOf(vm.emailName)==-1){
+      vm.emailHtml += '<div><b>Name:</b>&nbsp;&nbsp;' + vm.emailName + '</div>';
     }
-    if($scope.blanks.indexOf($scope.emailEmail)==-1){
-      $scope.emailHtml += '<div><b>Email:</b>&nbsp;&nbsp;' + $scope.emailEmail; + '</div>';
+    if(vm.blanks.indexOf(vm.emailEmail)==-1){
+      vm.emailHtml += '<div><b>Email:</b>&nbsp;&nbsp;' + vm.emailEmail; + '</div>';
     }
-    if($scope.blanks.indexOf($scope.emailPhone)==-1){
-      var phone = $scope.emailPhone;
-      $scope.emailHtml += '<div><b>Phone:</b>&nbsp;' + $scope.emailPhone; + '</div>';
+    if(vm.blanks.indexOf(vm.emailPhone)==-1){
+      var phone = vm.emailPhone;
+      vm.emailHtml += '<div><b>Phone:</b>&nbsp;' + vm.emailPhone; + '</div>';
     }
-    if($scope.blanks.indexOf($scope.emailRequest)==-1){
-      $scope.emailHtml += '<div><b>Content:</b><br />' + $scope.emailRequest; + '</div>';
-      $scope.sendEmailRequest();
+    if(vm.blanks.indexOf(vm.emailRequest)==-1){
+      vm.emailHtml += '<div><b>Content:</b><br />' + vm.emailRequest; + '</div>';
+      vm.sendEmailRequest();
     }else{
-      $scope.emailError = true;
+      vm.emailError = true;
     }
   }
 
-  $scope.sendEmailRequest = function(){
-    $scope.emailData.html = $scope.emailHtml;
-    var emailData = $scope.emailData;
+  vm.sendEmailRequest = function(){
+    vm.emailData.html = vm.emailHtml;
+    var emailData = vm.emailData;
     DataService.sendMail(emailData)
     .then(function(resp){
       console.log(resp);
       if(resp=='OK'){
-        $scope.emailSentMsg = 'Your email was sent.';
+        vm.emailSentMsg = 'Your email was sent.';
       }else{
-        $scope.emailSentMsg = 'Sorry, something went wrong and your email was not sent.';
+        vm.emailSentMsg = 'Sorry, something went wrong and your email was not sent.';
       }
-      $scope.showResult = true;
+      vm.showResult = true;
     });
 
   }
 
-  $scope.resetEmailForm = function(){
-    $scope.emailHtml = '';
-    $scope.emailName = null;
-    $scope.emailEmail = null;
-    $scope.emailPhone = null;
-    $scope.emailRequest = null;
-    $scope.showResult = false;
+  vm.resetEmailForm = function(){
+    vm.emailHtml = '';
+    vm.emailName = null;
+    vm.emailEmail = null;
+    vm.emailPhone = null;
+    vm.emailRequest = null;
+    vm.showResult = false;
     window.scrollTo(0,1);
   }
 }]);
