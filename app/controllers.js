@@ -117,6 +117,7 @@ angular.module('alloy.home', [])
         DataService.addDoc('cntxs',data).then(function(resp){
           console.log(resp);
           vm.toggle('.new-cntx');
+          vm.newCntxData = null;
           getCntxs();
         });
       }else{

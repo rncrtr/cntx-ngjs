@@ -37,7 +37,7 @@
           <div class="col text-primary h3" style="padding-top: 5px;">{{currentCtx.name || currentTitle}}</div>
           <div class="col-4 text-right" style="margin-top: 10px;">
             <button class="btn btn-sm text-danger btn-link" ng-click="deleteCntx(currentCtx)" ng-show="currentCtx._id">Delete Cntx</button>
-            <button class="btn btn-sm btn-primary" ng-click="toggle('.new-note','.new-note-editor')" ng-show="currentCtx._id">New Note</button>
+            <button class="btn btn-sm btn-primary" ng-click="toggle('.new-note','.new-note-editor')" ng-show="currentCtx._id || notes.length == 0">New Note</button>
           </div>
         </div>
         <!--NEW/EDIT NOTE-->
@@ -55,9 +55,9 @@
             <div class="row">
               <div class="col-md-6">
                 <br />
-                <select class="select-box" ng-model="newNoteData.cntxId">
+                <select class="select-box" ng-model="newNoteData.cntxId" ng-show="isEditNote">
                   <option value="">--Select Cntx--</option>
-                  <option value="">No cntx</option>
+                  <option value="">Everything</option>
                   <option ng-repeat="cntx in cntxs" ng-value="cntx._id">{{cntx.name}}</option>
                 </select>
                 <div class="errors text-danger" style="display: none;">
