@@ -40,7 +40,7 @@
             <button class="btn btn-sm btn-primary" ng-click="toggle('.new-note','.new-note-editor')" ng-show="currentCtx._id">New Note</button>
           </div>
         </div>
-        <!--NEW NOTE-->
+        <!--NEW/EDIT NOTE-->
         <div class="new-note rounded" style="padding-left: 10px; display: none;" >
           <b>Markdown Note</b>
           <div class="form-group">
@@ -48,12 +48,18 @@
               <div class="col-md-6">
                 <textarea ng-model="newNoteData.content" class="form-control new-note-editor" rows="10" placeholder="Lorem loved ipsum"></textarea>
               </div>
-              <div class="col-md-6 border border-default rounded">
-                <div markdown-to-html="(newNoteData.content || '')" class="md-preview"></div>
+              <div class="col-md-6 border border-default rounded md-preview">
+                <div markdown-to-html="(newNoteData.content || '')" class=""></div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-6">
+                <br />
+                <select class="select-box" ng-model="newNoteData.cntxId">
+                  <option value="">--Select Cntx--</option>
+                  <option value="">No cntx</option>
+                  <option ng-repeat="cntx in cntxs" ng-value="cntx._id">{{cntx.name}}</option>
+                </select>
                 <div class="errors text-danger" style="display: none;">
                   <div ng-repeat="err in errMsgs">{{err}}<br /></div>
                 </div>
@@ -61,15 +67,20 @@
               <div class="col-md-6 text-right">
                 <br />
                 <button class="btn btn-sm btn-link btn-primary" ng-click="toggle('.new-note','.new-note-editor')">Cancel</button>
-                <button class="btn btn-sm btn-primary new-note-save" ng-click="newNote()">Save</button>
+                <button class="btn btn-sm btn-primary new-note-save" ng-click="updNote()" ng-show="isEditNote">Update</button>
+                <button class="btn btn-sm btn-primary new-note-save" ng-click="newNote()" ng-show="!isEditNote">Save</button>
               </div>
             </div>
           </div>
         </div>
         <!--NOTE LIST-->
-        <div class="note-block" ng-repeat="note in notes | orderBy: '-ts' | filter: (!!currentCtx._id || undefined) && {cntxId: currentCtx._id}">
-          <div class="text-right"><small>{{note.ts | date:'short'}}&nbsp;&ndash;&nbsp;{{note.ts | timeago}}</small></div>
+        <div dnd-draggable="note" class="note-block" id="note_{{$index}}" ng-repeat="note in notes | orderBy: '-ts' | filter: (!!currentCtx._id || undefined) && {cntxId: currentCtx._id}" ng-click="toggleChild('.edit-note',$index)">
+          <div class="text-right"><small>{{note.ts | timeago}}</small><!--{{note.ts | date:'short'}}--></div>
           <div style="margin-top: -23px;" markdown-to-html="note.content"></div>
+          <div class="edit-note text-right" style="display: none; margin-top: -15px;">
+            <button class="btn btn-sm btn-link text-danger" ng-click="deleteNote(note._id)">Delete</button>
+            <button class="btn btn-sm btn-link text-success" ng-click="editNote(note._id)">Edit</button>
+          </div>
         </div>
         <div ng-show="filteredPostsCount > 0">
           No posts found

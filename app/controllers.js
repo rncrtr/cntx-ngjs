@@ -13,16 +13,20 @@ angular.module('alloy.home', [])
     let vm = $scope;
     vm.currentCtx = 0;
     vm.newNoteData = {title:null,content:null};
+    vm.editNoteData = {title:null,content:null};
     vm.newCntxData = {title:null};
     vm.err = 0;
     vm.errMsgs = [];
     vm.errMsgsCntx = [];
     vm.defaultTitles = ['Notes','Thoughts','Things','Bits','Snippets','Blips','Blurbs'];
     vm.currentTitle = vm.defaultTitles[Math.floor(Math.random()*vm.defaultTitles.length)];
-    console.log(vm.currentTitle);
+
     vm.setFilter = function(ctx){
       var thisCntx = vm.cntxs.filter((el) => el._id == ctx);
       //console.log('thisCntx',thisCntx);
+      if($('.new-note').css('display')=='block'){
+        vm.toggle('.new-note');
+      }
       if(thisCntx && thisCntx[0]){
         vm.currentCtx = thisCntx[0];
       }else{
@@ -46,6 +50,55 @@ angular.module('alloy.home', [])
           console.log(resp);
           vm.toggle('.new-note');
           getNotesByCntx(vm.currentCtx._id);
+        });
+      }else{
+        vm.toggle('.errors');
+        vm.newNoteData = null;
+        $('.new-note-save').prop('disabled', true);
+      }
+    }
+
+    vm.deleteNote = function(nid){
+      var verify = confirm('Are you sure you want to delete this note?');
+      if(verify){
+        console.log('Ka-boom! implosion of note');
+        DataService.deleteDoc('notes',nid).then(function(resp){
+          console.log(resp);
+          if(vm.currentCtx){
+            getNotesByCntx(vm.currentCtx._id);
+          }else{
+            getNotes();
+          }
+        });
+      }else{
+        console.log('then again maybe not');
+      }
+    }
+
+    vm.editNote = function(nid){
+      vm.toggle('.new-note','.new-note-editor');
+      vm.newNoteData = filterNoteById(nid);
+      vm.isEditNote = true;
+    }
+
+
+    vm.updNote = function(){
+      console.log(vm.newNoteData);
+      var data = {};
+      data.content = toErr(vm.newNoteData.content,'Required: Note content is empty');
+      data.cntxId = vm.newNoteData.cntxId;
+      data._id = vm.newNoteData._id;
+      //data.ts = createTS();
+      console.log(data);
+      if(vm.err==0){
+        DataService.updateDoc('notes',data._id,data).then(function(resp){
+          console.log(resp);
+          vm.toggle('.new-note');
+          if(vm.currentCtx){
+            getNotesByCntx(vm.currentCtx._id);
+          }else{
+            getNotes();
+          }
         });
       }else{
         vm.toggle('.errors');
@@ -115,11 +168,15 @@ angular.module('alloy.home', [])
       }
     }
 
+    vm.toggleChild = function(toggleSelector,parent){
+      //console.log('#note_'+parent+' '+toggleSelector);
+      $('#note_'+parent+' '+toggleSelector).toggle();
+    }
+
     function createTS(){
       var today = new Date();
       var dd = today.getDate();
       var mm = today.getMonth() + 1; //January is 0!
-
       var yyyy = today.getFullYear();
       if (dd < 10) {dd = '0' + dd;} 
       if (mm < 10) {mm = '0' + mm;} 
@@ -138,10 +195,15 @@ angular.module('alloy.home', [])
     }
 
     function getNotesByCntx(ctx){
-      DataService.getListByCntx('notes',ctx).then(function(resp){
-        console.log('Notes: ',resp);
-        vm.notes = resp;
-      });
+      if(ctx){
+        DataService.getListByCntx('notes',ctx).then(function(resp){
+          console.log('Notes: ',resp);
+          vm.notes = resp;
+        });
+      }else{
+        console.log('no ctx id sent');
+        getNotes();
+      }
     }
     
     function getCntxs(){
@@ -149,6 +211,12 @@ angular.module('alloy.home', [])
         console.log('Cntxs: ',resp);
         vm.cntxs = resp;
       });
+    }
+
+    function filterNoteById(nid){
+      var thisnote = vm.notes.filter((el) => el._id == nid)
+      //console.log(thisnote[0]);
+      return thisnote[0];
     }
 
     // init

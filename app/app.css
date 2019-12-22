@@ -1,6 +1,11 @@
 /* app css stylesheet */
 .md-preview{
   height: 250px;
+  background: #F0F8FF;
+}
+
+.new-note-editor{
+  background: #F0F8FF;
 }
 
 pre code{
@@ -14,6 +19,7 @@ pre code{
   padding-right: 5px;
   background: #F0F8FF;
   border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .cntxlist, .cntxlist li{
